@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  logic-tests:
+    name: Game logic tests (g++)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and run the tests
+        run: make -C tools test -j"$(nproc)"
+      - name: Warnings are errors for the code of the tests
+        run: make -C tools clean && make -C tools test -j"$(nproc)" CXXFLAGS="-std=c++20 -O0 -Wall -Wextra -Wno-unused-parameter -Werror"
+
+  audio-tools:
+    name: Sound and music tools (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy scipy soundfile
+      - name: The sound effects: every recipe renders, and the pack matches the table of the engine
+        run: python tools/audio/build_sfx.py --check
+      - name: The music: every score is analysed (ranges and clashes)
+        run: python tools/audio/build_bgm.py --check

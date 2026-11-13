@@ -1,0 +1,43 @@
+# POLARITY SHIFT: what Git leaves alone
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.aps
+*.APS
+ipch/
+
+# build output
+x64/
+Debug/
+Release/
+build/
+tools/build/
+*.obj
+*.pdb
+*.ilk
+*.tlog
+*.exe
+*.cso
+
+# files the game writes next to the exe while it runs
+save.dat
+history.dat
+meta.sav
+run_log.csv
+debug_report.txt
+postfx_error.txt
+config.ini
+
+# scratch: upload helpers, patches, python caches, system files
+upload_bundle/
+make_upload_bundle.ps1
+*.zip
+__pycache__/
+*.pyc
+Thumbs.db
+desktop.ini
+# backups left by patch tools
+*.bak

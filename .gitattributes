@@ -1,0 +1,35 @@
+# POLARITY SHIFT: how Git treats line endings and binary files
+* text=auto
+
+# source and text: LF (see .editorconfig)
+*.cpp text eol=lf
+*.h text eol=lf
+*.inc text eol=lf
+*.hlsl text eol=lf
+*.hlsli text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+Makefile text eol=lf
+
+# the game reads these texts byte for byte
+assets/lang/*.txt text eol=lf
+assets/audio/bgm/loops.txt text eol=lf
+
+# Visual Studio files
+*.sln text eol=crlf
+*.slnx text eol=crlf
+*.vcxproj text eol=crlf
+*.filters text eol=crlf
+*.ps1 text eol=crlf
+
+# binary: never touch
+*.png binary
+*.jpg binary
+*.wav binary
+*.ogg binary
+*.mp3 binary
+*.ttf binary
+*.ico binary
+*.cso binary

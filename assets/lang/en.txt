@@ -1,0 +1,92 @@
+# English. The keys of the other language files are the English texts the code uses; this file gives the English that is shown
+# when it is different from the key (a missing key shows the key itself).
+# key<TAB>text.
+SPECIAL	PIERCE
+USE SPECIAL ATTACK	FIRE THE PIERCING BEAM
+ENERGY FULL = PRESS V	FULL ENERGY = PRESS V
+FIRE SPECIAL	FIRE PIERCING BEAM
+EXIT	QUIT
+NEXT UNLOCK	UNLOCK TARGET
+MAX HP -1	STARTING HP -1
+MAX HP -20	STARTING HP -20
+FIRE BAND AFTER SPECIAL	FLAME BAND AFTER PIERCE
+NEEDS DAMAGE	ONLY WHEN DAMAGED
+READY: H ON TITLE	READY: PRESS H ON TITLE
+MATCH BULLET COLOR	MATCH THE BULLET COLOR
+NEW BEST	NEW BEST
+# ---- records page (run log), controls tabs
+ENERGY FULL = MIDDLE CLICK / SIDE 2	FULL ENERGY = MIDDLE CLICK / SIDE 2
+ENERGY FULL = PRESS Y	FULL ENERGY = PRESS Y
+OVERLOAD	OVERLOAD: FIRE THE PIERCING BEAM
+BROKEN	BROKEN: 1.5 TIMES DAMAGE
+BREAK THE OVERLOAD = DAMAGE WINDOW	BREAK THE OVERLOAD WITH THE PIERCING BEAM = 1.5 TIMES DAMAGE
+EVERY 6 S A SHOCKWAVE: BULLETS TO ENERGY	SHOCKWAVE EVERY 6 S: BULLETS TO ENERGY
+WHITE BEAM: BREAKS SHIELDS AND OVERLOADS	THE WHITE BEAM BREAKS SHIELDS AND OVERLOADS
+GAME CLEAR	MISSION CLEAR
+PLAY AGAIN	SORTIE AGAIN
+START GAME	SORTIE
+RES ABSORB 2	ABSORB RANGE +{0}%
+RES ABSORB 3	ARC EVERY {0} ABSORBS
+RES BREAK 2	BEAM COSTS {0} LESS ENERGY
+RES BREAK 3	BEAM END BURSTS: {0} SHOTS
+RES SURVIVE 2	MAX HP +{0}
+RES SURVIVE 3	+{0} HP EVERY BOSS PHASE
+RES 2	2 MODULES
+RES 3	3 MODULES
+GAME	GAME
+AUDIO	AUDIO
+CONTROLS	CONTROLS
+VSYNC	VSYNC
+FPS LIMIT	FRAME RATE LIMIT
+NO LIMIT	NO LIMIT
+SCREEN SHAKE	SCREEN SHAKE
+FLASHES	FLASHES
+MOUSE STEERING	MOUSE STEERING
+MOVE UP	MOVE UP
+MOVE DOWN	MOVE DOWN
+MOVE LEFT	MOVE LEFT
+MOVE RIGHT	MOVE RIGHT
+RESET KEYS	RESET KEYS TO DEFAULT
+PRESS A KEY	PRESS A KEY
+KEY SET	KEY SET
+KEYS RESET	KEYS RESET
+HINT VSYNC	ON: the picture waits for the display (no tearing). OFF: lower delay.
+HINT FPS LIMIT	Caps the frames drawn per second: lower is cooler and quieter. The game logic always runs at 60 steps a second.
+HINT SHOW FPS	Shows the frame rate and frame time at the lower right (F3 does the same).
+HINT BACKGROUND	How bright the red / blue field behind the fight is. It never covers the bullets.
+HINT SCREEN SHAKE	How much the picture shakes on hits and explosions. 0 turns it off.
+HINT FLASHES	The white flashes and the colour fringe of hits and cut-ins. 0 turns them off.
+HINT MOUSE STEERING	OFF: the ship no longer follows the mouse; keys and pad only.
+HINT RESET KEYS	Puts every key of the ship back to its default.
+HINT KEY	ENTER, then press the new key. A key that is taken swaps places with its action. ESC cancels.
+OTHER DEVICES MOUSE	MOUSE: left SHOT / right SWITCH / middle SPECIAL / side TACTIC
+OTHER DEVICES PAD	PAD: A SHOT / X SWITCH / Y SPECIAL / LT TACTIC
+CLEARS	CLEARS
+FASTEST CLEAR	FASTEST CLEAR
+RECENT RUNS	RECENT RUNS
+OPEN	OPEN
+OTHER RUNS	OTHER RUNS
+
+
+# ---- training stage, hangar page, mouse / gamepad settings, synergies (this build)
+HINT DEAD ZONE	Tilts of the stick smaller than this count as not moving. High: no drift. Low: more sensitive.
+HINT MOUSE BUTTON	ENTER, then press the mouse button. A button that is taken swaps places with its action. ESC cancels.
+HINT PAD BUTTON	ENTER, then press the button on the pad. A button that is taken swaps places with its action. ESC cancels.
+HINT PAD EXTRA	ON: RT shoots, LB switches, RB fires the beam, B and the stick click are the tactic (until the button is bound to another action).
+HINT RESET MOUSE	Puts every mouse button back to its default.
+HINT RESET PAD	Puts the pad buttons, the vibration and the dead zone back to their defaults.
+HINT VIBRATION	How hard the pad shakes on hits and explosions. 0 turns it off. A test pulse comes as you change it.
+MENUS ALWAYS USE ARROWS ENTER ESC	Menus always use the arrow keys, ENTER and ESC.
+MENUS ALWAYS USE LEFT RIGHT CLICK	Menus always use the left and the right mouse button.
+MENUS ALWAYS USE A B START	Menus always use A, B and START.
+
+
+# ---- audio page (version 2 of the audio system)
+MASTER VOLUME	MASTER VOLUME
+CUE EMPHASIS	CUE EMPHASIS
+LOW HP HEARTBEAT	LOW HP HEARTBEAT
+MUTE IN BACKGROUND	MUTE IN BACKGROUND
+HINT MASTER VOLUME	The volume of everything.
+HINT CUE EMPHASIS	How loud the key cues are (the white needle warning, the overload alarm, the break of an overload) and how much the rest steps back while one sounds.
+HINT HEARTBEAT	A nearly lost ship has a heartbeat, and the high end of the music is muffled a little.
+HINT MUTE IN BACKGROUND	ON: no sound while the window is not in front. OFF: the sound goes on.

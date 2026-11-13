@@ -1,0 +1,1 @@
+# name<TAB>frame the loop starts at. No line = the track loops from its first frame (all of them do).

@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{efb1571d-3106-4514-b3aa-93e7a99ad4b5}</ProjectGuid>
+    <RootNamespace>GE06</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GAME_AUDIO_OGG;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>windowscodecs.lib</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+    </Manifest>
+    <PostBuildEvent>
+      <Command>xcopy /E /I /Y /D /Q "$(ProjectDir)assets" "$(OutDir)assets"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>GAME_AUDIO_OGG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>windowscodecs.lib</AdditionalDependencies>
+    </Link>
+    <Manifest>
+      <EnableSegmentHeap>true</EnableSegmentHeap>
+    </Manifest>
+    <PostBuildEvent>
+      <Command>xcopy /E /I /Y /D /Q "$(ProjectDir)assets" "$(OutDir)assets"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\boss\BossDraw.cpp" />
+    <ClCompile Include="src\boss\BossMask.cpp" />
+    <ClCompile Include="src\boss\GameBoss.cpp" />
+    <ClCompile Include="src\core\AssetManager.cpp" />
+    <ClCompile Include="src\core\Collision.cpp" />
+    <ClCompile Include="src\core\DebugOptions.cpp" />
+    <ClCompile Include="src\core\DirectX.cpp" />
+    <ClCompile Include="src\core\DisplaySystem.cpp" />
+    <ClCompile Include="src\core\GameAudio.cpp" />
+    <ClCompile Include="src\core\GameInput.cpp" />
+    <ClCompile Include="src\core\GameTimer.cpp" />
+    <ClCompile Include="src\core\GameSettings.cpp" />
+    <ClCompile Include="src\core\Loc.cpp" />
+    <ClCompile Include="src\core\Renderer2D.cpp" />
+    <ClCompile Include="src\core\TextureLoader.cpp" />
+    <ClCompile Include="src\core\PostFx.cpp" />
+    <ClCompile Include="src\core\TextRenderer.cpp" />
+    <ClCompile Include="src\core\main.cpp" />
+    <ClCompile Include="src\game\BeamFx.cpp" />
+    <ClCompile Include="src\game\Combat.cpp" />
+    <ClCompile Include="src\game\EnemyArt.cpp" />
+    <ClCompile Include="src\game\EnemyDraw.cpp" />
+    <ClCompile Include="src\game\Game.cpp" />
+    <ClCompile Include="src\game\GameBackground.cpp" />
+    <ClCompile Include="src\game\GameEffect.cpp" />
+    <ClCompile Include="src\game\GameEnemy.cpp" />
+    <ClCompile Include="src\game\GameFlow.cpp" />
+    <ClCompile Include="src\game\GamePlayer.cpp" />
+    <ClCompile Include="src\game\GamePlayerBullet.cpp" />
+    <ClCompile Include="src\game\GameSave.cpp" />
+    <ClCompile Include="src\game\GameSpecialShot.cpp" />
+    <ClCompile Include="src\game\GameState.cpp" />
+    <ClCompile Include="src\game\GameVfx.cpp" />
+    <ClCompile Include="src\game\GameWave.cpp" />
+    <ClCompile Include="src\game\ScreenShake.cpp" />
+    <ClCompile Include="src\game\scene\GameClearScene.cpp" />
+    <ClCompile Include="src\game\scene\GameOverScene.cpp" />
+    <ClCompile Include="src\game\scene\HowToScene.cpp" />
+    <ClCompile Include="src\game\scene\HowToTraining.cpp" />
+    <ClCompile Include="src\game\scene\PauseMenu.cpp" />
+    <ClCompile Include="src\game\scene\PlayScene.cpp" />
+    <ClCompile Include="src\game\scene\RecordsScene.cpp" />
+    <ClCompile Include="src\game\scene\SettingsScene.cpp" />
+    <ClCompile Include="src\game\scene\TitleScene.cpp" />
+    <ClCompile Include="src\rogue\Meta.cpp" />
+    <ClCompile Include="src\rogue\Modules.cpp" />
+    <ClCompile Include="src\rogue\ModulesData.cpp" />
+    <ClCompile Include="src\rogue\ModulesDemo.cpp" />
+    <ClCompile Include="src\rogue\ModulesDirector.cpp" />
+    <ClCompile Include="src\rogue\ModulesDraw.cpp" />
+    <ClCompile Include="src\rogue\ModulesDrawMenus.cpp" />
+    <ClCompile Include="src\rogue\ModulesEffects.cpp" />
+    <ClCompile Include="src\rogue\ModulesHangar.cpp" />
+    <ClCompile Include="src\rogue\ModulesSynergyDemo.cpp" />
+    <ClCompile Include="src\rogue\ModulesPick.cpp" />
+    <ClCompile Include="src\ui\GameHud.cpp" />
+    <ClCompile Include="src\ui\GameMenuUi.cpp" />
+    <ClCompile Include="src\ui\CutIn.cpp" />
+    <ClCompile Include="src\ui\SceneFx.cpp" />
+    <ClCompile Include="src\ui\TextTheme.cpp" />
+    <ClCompile Include="src\ui\DemoKit.cpp" />
+    <ClCompile Include="src\ui\UiKit.cpp" />
+    <ClCompile Include="src\ui\Wordmark.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\postfx.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\postfx_vs.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSFull</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)postfx_vs.cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSFull</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)postfx_vs.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_prefilter.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSPrefilter</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)postfx_prefilter.cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSPrefilter</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)postfx_prefilter.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_down.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSDown</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)postfx_down.cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSDown</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)postfx_down.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_up.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSUp</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)postfx_up.cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSUp</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)postfx_up.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_composite.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSComposite</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)postfx_composite.cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSComposite</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)postfx_composite.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_fill.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSFill</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)postfx_fill.cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSFill</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)postfx_fill.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\shader_pattern_2d.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSPattern</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)shader_pattern_2d.cso</ObjectFileOutput>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSPattern</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)shader_pattern_2d.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\shader_pixel_2d.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">PSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)shader_pixel_2d.cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)shader_pixel_2d.cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="shaders\shader_vertex_2d.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)shader_vertex_2d.cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)shader_vertex_2d.cso</ObjectFileOutput>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\boss\BossInternal.h" />
+    <ClInclude Include="src\boss\BossMask.h" />
+    <ClInclude Include="src\boss\GameBoss.h" />
+    <ClInclude Include="src\core\AssetManager.h" />
+    <ClInclude Include="src\core\Collision.h" />
+    <ClInclude Include="src\core\DebugOptions.h" />
+    <ClInclude Include="src\core\DirectX.h" />
+    <ClInclude Include="src\core\DisplaySystem.h" />
+    <ClInclude Include="src\core\AudioLogic.h" />
+    <ClInclude Include="src\core\AudioMap.h" />
+    <ClInclude Include="src\core\GameAudio.h" />
+    <ClInclude Include="src\core\GameInput.h" />
+    <ClInclude Include="src\core\GameTimer.h" />
+    <ClInclude Include="src\core\GameSettings.h" />
+    <ClInclude Include="src\core\Loc.h" />
+    <ClInclude Include="src\core\Renderer2D.h" />
+    <ClInclude Include="src\core\TextureLoader.h" />
+    <ClInclude Include="src\core\PostFx.h" />
+    <ClInclude Include="src\core\TextRenderer.h" />
+    <ClInclude Include="src\game\BeamFx.h" />
+    <ClInclude Include="src\game\Combat.h" />
+    <ClInclude Include="src\game\EnemyArt.h" />
+    <ClInclude Include="src\game\EnemyInternal.h" />
+    <ClInclude Include="src\game\Game.h" />
+    <ClInclude Include="src\game\GalaxyStars.h" />
+    <ClInclude Include="src\game\GameBackground.h" />
+    <ClInclude Include="src\game\GameEffect.h" />
+    <ClInclude Include="src\game\GameEnemy.h" />
+    <ClInclude Include="src\game\GameFlow.h" />
+    <ClInclude Include="src\game\GamePlayer.h" />
+    <ClInclude Include="src\game\GamePlayerBullet.h" />
+    <ClInclude Include="src\game\GameSave.h" />
+    <ClInclude Include="src\game\GameSpecialShot.h" />
+    <ClInclude Include="src\game\GameState.h" />
+    <ClInclude Include="src\game\GameTypes.h" />
+    <ClInclude Include="src\game\GameVfx.h" />
+    <ClInclude Include="src\game\GameWave.h" />
+    <ClInclude Include="src\game\ScreenShake.h" />
+    <ClInclude Include="src\game\scene\GameClearScene.h" />
+    <ClInclude Include="src\game\scene\GameOverScene.h" />
+    <ClInclude Include="src\game\scene\HowToScene.h" />
+    <ClInclude Include="src\game\scene\HowToTraining.h" />
+    <ClInclude Include="src\game\scene\PauseMenu.h" />
+    <ClInclude Include="src\game\scene\PlayScene.h" />
+    <ClInclude Include="src\game\scene\RecordsScene.h" />
+    <ClInclude Include="src\game\scene\SettingsScene.h" />
+    <ClInclude Include="src\game\scene\TitleScene.h" />
+    <ClInclude Include="src\rogue\Balance.h" />
+    <ClInclude Include="src\rogue\Meta.h" />
+    <ClInclude Include="src\rogue\ModuleDefs.h" />
+    <ClInclude Include="src\rogue\Modules.h" />
+    <ClInclude Include="src\rogue\ModulesDrawInternal.h" />
+    <ClInclude Include="src\rogue\ModulesInternal.h" />
+    <ClInclude Include="src\ui\GameHud.h" />
+    <ClInclude Include="src\ui\GameMenuUi.h" />
+    <ClInclude Include="src\ui\CutIn.h" />
+    <ClInclude Include="src\ui\SceneFx.h" />
+    <ClInclude Include="src\ui\TextTheme.h" />
+    <ClInclude Include="src\ui\UiAtlas.h" />
+    <ClInclude Include="src\ui\DemoKit.h" />
+    <ClInclude Include="src\ui\UiKit.h" />
+    <ClInclude Include="src\ui\Wordmark.h" />
+    <ClInclude Include="src\ui\WordmarkGlyphs.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GE_06.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\core\OggDecode.cpp" />
+    <ClCompile Include="src\third_party\stb_vorbis.c">
+      <!-- third party, plain C, not ours: no warnings, no SDL checks, the switches that leave out what is not used -->
+      <CompileAs>CompileAsC</CompileAs>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <SDLCheck>false</SDLCheck>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions>STB_VORBIS_NO_STDIO;STB_VORBIS_NO_PUSHDATA_API;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
+

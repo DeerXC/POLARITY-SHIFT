@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4d1390e3-f679-5a4f-b7ed-a3d813a4e3e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\boss">
+      <UniqueIdentifier>{09aabd39-cfa1-561a-a339-17adfc92c246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core">
+      <UniqueIdentifier>{b02c7aba-b8fc-54e0-8e0c-6a218bee4524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\game">
+      <UniqueIdentifier>{66bc7958-9881-5be1-bd22-eca4728a1df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\game\scene">
+      <UniqueIdentifier>{6b1197a8-637c-5a16-a6b6-5d5b650121fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\rogue">
+      <UniqueIdentifier>{20db8af2-4823-5e9b-b1db-13ff37eb0c26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui">
+      <UniqueIdentifier>{1d728250-5271-5a5d-80d9-9bd4a2910c89}</UniqueIdentifier>
+    </Filter>
+<Filter Include="res">
+      <UniqueIdentifier>{303eefc1-917f-5299-a9e1-913eed644027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{f71851cb-0488-54ea-b961-1ae96df461e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\boss\BossDraw.cpp">
+      <Filter>src\boss</Filter>
+    </ClCompile>
+    <ClCompile Include="src\boss\BossMask.cpp">
+      <Filter>src\boss</Filter>
+    </ClCompile>
+    <ClCompile Include="src\boss\GameBoss.cpp">
+      <Filter>src\boss</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\AssetManager.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Collision.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\DebugOptions.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\DirectX.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\DisplaySystem.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\GameAudio.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\GameInput.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\GameTimer.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\GameSettings.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Loc.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\TextureLoader.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Renderer2D.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\PostFx.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\TextRenderer.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\main.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\BeamFx.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\Combat.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\EnemyArt.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\EnemyDraw.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\Game.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameBackground.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameEffect.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameEnemy.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameFlow.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GamePlayer.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GamePlayerBullet.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameSave.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameSpecialShot.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameState.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameVfx.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\GameWave.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\ScreenShake.cpp">
+      <Filter>src\game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\GameClearScene.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\GameOverScene.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\HowToTraining.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\HowToScene.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\PauseMenu.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\PlayScene.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\RecordsScene.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\SettingsScene.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\scene\TitleScene.cpp">
+      <Filter>src\game\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\Meta.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\Modules.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesDemo.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesData.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesDirector.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesDraw.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesDrawMenus.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesEffects.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesHangar.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesSynergyDemo.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rogue\ModulesPick.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\CutIn.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\GameHud.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\GameMenuUi.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\TextTheme.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\DemoKit.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\UiKit.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Wordmark.cpp">
+      <Filter>src\ui</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\postfx_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_prefilter.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_down.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_up.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_composite.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_fill.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\postfx.hlsli">
+      <Filter>shaders</Filter>
+    </None>
+    <FxCompile Include="shaders\shader_pattern_2d.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\shader_pixel_2d.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\shader_vertex_2d.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\boss\BossInternal.h">
+      <Filter>src\boss</Filter>
+    </ClInclude>
+    <ClInclude Include="src\boss\BossMask.h">
+      <Filter>src\boss</Filter>
+    </ClInclude>
+    <ClInclude Include="src\boss\GameBoss.h">
+      <Filter>src\boss</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\AssetManager.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Collision.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\DebugOptions.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\DirectX.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\DisplaySystem.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\AudioLogic.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\AudioMap.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\GameAudio.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\GameInput.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\GameTimer.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\GameSettings.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Loc.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\TextureLoader.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Renderer2D.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\PostFx.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\TextRenderer.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\BeamFx.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Combat.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\EnemyArt.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\EnemyInternal.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Game.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GalaxyStars.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameBackground.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameEffect.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameEnemy.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameFlow.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GamePlayer.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GamePlayerBullet.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameSave.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameSpecialShot.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameState.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameTypes.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameVfx.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\GameWave.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\ScreenShake.h">
+      <Filter>src\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\GameClearScene.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\GameOverScene.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\HowToTraining.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\HowToScene.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\PauseMenu.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\PlayScene.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\RecordsScene.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\SettingsScene.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\scene\TitleScene.h">
+      <Filter>src\game\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rogue\Balance.h">
+      <Filter>src\rogue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rogue\Meta.h">
+      <Filter>src\rogue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rogue\ModuleDefs.h">
+      <Filter>src\rogue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rogue\Modules.h">
+      <Filter>src\rogue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rogue\ModulesDrawInternal.h">
+      <Filter>src\rogue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rogue\ModulesInternal.h">
+      <Filter>src\rogue</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\CutIn.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\GameHud.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\GameMenuUi.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\TextTheme.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\UiAtlas.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\DemoKit.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\UiKit.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\Wordmark.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\WordmarkGlyphs.h">
+      <Filter>src\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>res</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GE_06.rc">
+      <Filter>res</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\icon.ico">
+      <Filter>res</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
+
+
+
+
+
+
+
+
+
+

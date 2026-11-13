@@ -1,0 +1,491 @@
+# key<TAB>translation. Keys are the English texts used in the code; a missing key falls back to the English text.
+# {0} / {1} are replaced by numbers. Glossary: see tools/lang_table.py.
+__name	日本語
+
+# ---- title, how to play, settings
+START GAME	出撃
+HOW TO PLAY	遊び方
+RECORDS	戦績
+SETTINGS	設定
+EXIT	終了
+HANGAR	ハンガー
+ENTER / LEFT CLICK	ENTER / 左クリック
+SWITCH	切替
+ABSORB	吸収
+BREAK	突破
+SURVIVE	生存
+BASIC CONTROLS	操作
+CORE GAMEPLAY	ルール
+MOVE	移動
+SHOT	ショット
+SPECIAL	貫通ビーム
+TACTIC	タクティクス
+TACTICS	タクティクス
+PAUSE	ポーズ
+SWITCH POLARITY	極性切替
+SWITCH COLOR	極性切替
+PRESS C TO CHANGE BLUE OR RED	C キーで赤と青を切り替える
+RIGHT CLICK TO CHANGE BLUE OR RED	右クリックで赤と青を切り替える
+PRESS X TO CHANGE BLUE OR RED	X ボタンで赤と青を切り替える
+MATCH BULLET COLOR	同色吸収
+MATCH THE BULLET COLOR TO ABSORB IT	敵弾と同じ色なら吸収できる
+SAME COLOR = ABSORB ENERGY	同色：吸収してエネルギーに
+OTHER COLOR = TAKE DAMAGE	異色：被弾する
+WRONG COLOR HURTS	異色は被弾
+USE SPECIAL ATTACK	貫通ビームを撃つ
+FIRE SPECIAL	貫通ビーム発射
+ENERGY FULL = PRESS V	エネルギー満タンで V キー
+ENERGY FULL = MIDDLE CLICK / SIDE 2	エネルギー満タンで中クリック / サイド 2
+ENERGY FULL = PRESS Y	エネルギー満タンで Y ボタン
+ENERGY READY	エネルギー満タン
+ENERGY NOT FULL: DODGE IT	エネルギー不足：まずは回避
+WHITE BULLETS	白弾
+CANNOT BE ABSORBED: DODGE THEM	吸収できない。避けるしかない
+FIRED BY SNIPERS AND THE BOSS	スナイパーと裁定者が撃ってくる
+WHITE BEAM: BREAKS SHIELDS AND OVERLOADS	貫通ビーム：シールドを破り、オーバーロードを止める
+THE WHITE BEAM BREAKS THE SHIELD	貫通ビームでシールドを破れる
+ELITES	エリート
+GOLD CORNERS AND A SHIELD: SHOTS DO 25% LESS	金の縁取りとシールド：ショットのダメージ -25%
+ENTER TO START	ENTER で出撃
+LEFT CLICK TO START	左クリックで出撃
+PRESS A TO START	A ボタンで出撃
+ESC OR RIGHT CLICK TO BACK	ESC / 右クリックで戻る
+ESC OR RIGHT CLICK	ESC / 右クリックで戻る
+PRESS B TO BACK	B ボタンで戻る
+KEYBOARD	キーボード
+MOUSE	マウス
+GAMEPAD	ゲームパッド
+CURSOR	カーソル
+LEFT CLICK	左クリック
+RIGHT CLICK	右クリック
+MIDDLE / SIDE 2	中クリック / サイド 2
+SIDE BUTTON 1	サイド 1
+PAUSE BUTTON	右上のボタン
+L STICK	L スティック
+DISPLAY	画面
+SOUND	サウンド
+DISPLAY MODE	表示モード
+RESOLUTION	解像度
+WINDOWED	ウィンドウ
+FULLSCREEN	フルスクリーン
+LANGUAGE	言語
+BACKGROUND	背景の明るさ
+BGM VOLUME	BGM 音量
+SE VOLUME	SE 音量
+SHOW FPS	FPS 表示
+ON	オン
+OFF	オフ
+APPLY	適用
+BACK	戻る
+SETTINGS APPLIED	設定を反映しました
+CHANGES APPLY AT ONCE	変更はすぐに反映されます
+DISPLAY CHANGE FAILED	画面設定を反映できませんでした
+
+# ---- records
+HIGH SCORE	ハイスコア
+PLAY COUNT	出撃回数
+CLEAR COUNT	クリア回数
+RUN LOG	出撃ログ
+NO RUNS YET	出撃記録はまだありません
+CLEARED	クリア
+DEFEATED	撃墜
+ABANDONED	途中離脱
+BOSS PHASE {0}	裁定者 フェーズ {0}
+DETAIL	詳細
+DATE	日付
+MODE	モード
+RESULT	結果
+HITS TAKEN	被弾数
+SELECT / PAGE	選択 / ページ
+BEST STREAK	最大コンボ
+NEW BEST	自己ベスト更新
+
+# ---- pause, results
+RESUME	再開
+RESTART	リスタート
+TITLE	タイトルへ
+ESC TO RESUME	ESC で再開
+ESC TO BACK	ESC で戻る
+GAME CLEAR	ミッションクリア
+GAME OVER	ゲームオーバー
+RANK	ランク
+SCORE	スコア
+NEW RUN	新たな出撃
+ENTER OR CLICK	ENTER / クリック
+PLAY AGAIN	再出撃
+REACHED WAVE {0}	WAVE {0} に到達
+REACHED BOSS PHASE {0}	裁定者 フェーズ {0} に到達
+TIME	タイム
+WAVES CLEARED	突破 WAVE
+REACHED THE BOSS	裁定者に到達
+BOSS PHASES	裁定者フェーズ
+BOSS DEFEATED	裁定者撃破
+ABSORBS	吸収数
+HP	HP
+MAX COMBO	最大コンボ
++{0} SHARDS	+{0} シャード
+
+# ---- battle
+WAVE {0}	WAVE {0}
+WAVE CLEAR	WAVE クリア
+CLEARED {0}%	撃破率 {0}%
+BOSS APPROACHING	裁定者 接近中
+WARNING	警告
+HIGH ENERGY SIGNATURE DETECTED	高エネルギー反応を検知
+COMBO	コンボ
+STREAK	コンボ
+CHAIN {0}%	連続吸収 {0}%
+READY	READY
+ARBITER	裁定者
+PHASE {0}	フェーズ {0}
+AWAKENING	覚醒
+SPLIT	分離
+CORE	コア
+OVERLOAD	オーバーロード · 貫通ビームで阻止
+BREAK THE OVERLOAD = DAMAGE WINDOW	貫通ビームでオーバーロードを阻止：ダメージ 1.5 倍
+BREAK!	ブレイク！
+BROKEN	ブレイク中 · ダメージ 1.5 倍
+SHELL CLOSED: SHOOT THE DRONES	シェル閉鎖中：先にドローンを撃墜
+THE HULL ENDS THE PHASE	本体を破壊するとフェーズ終了
+SHOT-DOWN DRONES COME BACK	撃墜したドローンは再出撃する
+DOWN BOTH DRONES TO OPEN THE CORE	ドローン 2 機を撃墜するとコアのシェルが開く
+
+# ---- modules: pick screen
+MODULES	モジュール
+NO MODULES	モジュールなし
+CHOOSE A MODULE	モジュールを選択
+PICK ONE OF THREE	3 つから 1 つ
+PRESS 1 2 3 OR CLICK	1 2 3 キーかクリックで選択
+PRESS 1 2 OR CLICK	1 2 キーかクリックで選択
+NEW MODULE	新モジュール
+NO NEW MODULE	新モジュールなし
+ONLY ONE NEW MODULE	新モジュールは 1 つだけ
+UPGRADE	強化
+UPGRADE A MODULE	モジュールを 1 つ強化
+UPGRADE TO LEVEL {0}	Lv.{0} に強化
+TWO MODULE UPGRADES	モジュールを 2 つ強化
+NOTHING TO UPGRADE	強化できるモジュールがない
+BIGGER EFFECTS, LOWER COSTS	効果アップ、代償ダウン
+LEVEL {0}	Lv.{0}
+LEVEL {0} / {1}	Lv.{0} / {1}
+MAX LEVEL	最大レベル
+REROLL	リロール
+NO REROLL LEFT IN THIS RUN	このランのリロールは使い切った
+NEW CARDS. THE ONES ON OFFER DO NOT COME BACK	カードを引き直す。今のカードは二度と出ない
+AN UPGRADE AMONG THE CARDS	カードに強化が必ず 1 枚
+NO DRAWBACK	代償なし
+RESONANCE	共鳴
+2 / 3 OF A TYPE: A BONUS EACH	同系統を 2 つ / 3 つ揃えるとそれぞれボーナス
+SYNERGY	シナジー
+NEW SYNERGY	シナジー発見
+{0} SYNERGIES TO DISCOVER	未発見のシナジー {0}
+{0} MORE TO DISCOVER	あと {0} 個が未発見
+
+# ---- modules: names
+SIPHON	サイフォン
+ECHO	エコー
+EMBER	エンバー
+BACKUP CORE	予備コア
+PULSE	パルス
+OVERFLOW	オーバーフロー
+MOMENTUM	モメンタム
+BREACH	ブリーチ
+AEGIS	イージス
+MEND	リペア
+DEFLECT	デフレクト
+TWIN	ツイン
+AFTERGLOW	残光
+FOCUS	フォーカス
+BACKWATER	背水
+DECOY	デコイ
+DASH	フェイズダッシュ
+CHARGE SHOT	チャージショット
+
+# ---- modules: effects and costs
+ABSORB RANGE +90%	吸収範囲 +90%
+EVERY 4 ABSORBS: AN ARC	4 回吸収ごとにアークを放つ
+THE ARC JUMPS TO 2 MORE ENEMIES	アークがさらに 2 体へ連鎖
+40%+ ENERGY: ABSORBS FIRE ARCS	エネルギー 40% 以上：吸収するたびアーク
+FULL BAR: ABSORBED BULLETS ARE STORED	満タン時、吸収した弾をストック
+EACH: NEXT BEAM +4% DAMAGE AND LENGTH	1 発ごとに次の貫通ビームの威力と長さ +4%
+FIRE BAND AFTER SPECIAL	貫通ビームの跡に 2 秒間の炎の帯
+THE FIRE BURNS BULLETS INTO ENERGY	炎が敵弾を焼いてエネルギーに変える
+REVIVE ONCE WITH HALF THE HP	一度だけ HP 半分で復活
+AND A BLAST OVER THE WHOLE SCREEN	さらに全画面に衝撃波
+ENERGY RESETS	復活時にエネルギーが 0 に
+EVERY 6 S A SHOCKWAVE: BULLETS TO ENERGY	6 秒ごとに衝撃波で敵弾をエネルギー化
+BODY HITS -25%, A HIT BRINGS IT SOONER	体当たりダメージ -25%、被弾で衝撃波が早まる
+PULSE REACHES TWICE AS FAR	パルスの範囲が約 2 倍
+EACH ABSORB: FIRE RATE +8%, MAX +64%	吸収ごとに連射速度 +8%（最大 +64%）
+STACKS FADE AFTER 4 SECONDS	4 秒吸収しないとスタックが減っていく
+IGNORES ALL DAMAGE REDUCTION	すべてのダメージ軽減を無視
+ELITE SHIELDS, BOSS RESISTANCE	エリートのシールド、裁定者の耐性
+BLOCKS ONE WHITE BULLET OR BEAM	白弾かビームを 1 回防ぐ
+RECHARGES EVERY 40 ABSORBS	40 回吸収ごとに再充填
+5 S WITHOUT A HIT: 1 HP EVERY 1.5 S	5 秒被弾しないと 1.5 秒ごとに HP 1 回復
+WHITE BULLETS THAT GRAZE: 85% ABSORBED	グレイズした白弾を 85% 吸収
+HALF BAR: A HALF BEAM	エネルギー半分でハーフビーム
+IT COSTS HALF A BAR, 75% DAMAGE	消費はゲージ半分、威力 75%
+AFTER THE BEAM: FIRE RATE +40%	貫通ビームの後：連射速度 +40%
+AND SHOT DAMAGE +40% FOR 4 S	ショットの威力 +40%（4 秒間）
+HITS ON ONE TARGET: +4% EACH	同じ敵に当て続けると 1 発ごとに +4%
+UP TO +40%, RESET ON A NEW TARGET	最大 +40%、狙いを変えるとリセット
+FULL FOCUS: ANOTHER +25% DAMAGE	フォーカス最大：さらに威力 +25%
+UNDER HALF HP: ABSORB ENERGY +20%	HP 半分以下：吸収エネルギー +20%
+TACTIC KEY: DROP A DECOY	タクティクスキー：デコイを置く
+IT PULLS AND ABSORBS BULLETS OF YOUR COLOR	自機と同じ色の弾を引き寄せて吸収
+TACTIC KEY: DASH WHERE YOU MOVE	タクティクスキー：移動方向へダッシュ
+INVINCIBLE WHILE DASHING, 2.5 S COOLDOWN	ダッシュ中は無敵、クールダウン 2.5 秒
+HOLD THE TACTIC KEY: CHARGE A BEAM	タクティクスキー長押し：ビームをチャージ
+A FULL CHARGE BREAKS AN OVERLOAD	フルチャージでオーバーロードを阻止
+MAX HP -10%	最大 HP -10%
+MAX HP -15%	最大 HP -15%
+MAX HP -1	初期 HP -1
+MAX HP -20	初期 HP -20
+ABSORB ENERGY -10%	吸収エネルギー -10%
+ABSORB ENERGY -15%	吸収エネルギー -15%
+ENERGY LEAKS WHEN IDLE	3 秒吸収しないとエネルギーが漏れる
+20 ABSORBS = +1 HP	20 回吸収で HP +1
+ONCE PER WAVE	1 WAVE に 1 回
+BEAM NEEDS 15 LESS, LONGER INVINCIBILITY	貫通ビームの必要量 -15、無敵時間が延長
+A LONGER BEAM DEALS MORE DAMAGE	長いビームほど高威力
+MORE TIME TO GET AWAY AFTER A HIT	被弾後に逃げる時間が増える
+AND THEY GIVE TRIPLE ENERGY	しかもエネルギー 3 倍
+
+# ---- modules: the numbers of an upgrade
+ABSORB RANGE	吸収範囲
+FLAMES LAST	炎の持続
+REVIVE WITH	復活時の HP
+ARC DAMAGE	アークの威力
+ARC TARGETS	アークの対象数
+FIRE RATE AT FULL STACKS	最大スタック時の連射速度
+DAMAGE TO THE BOSS	裁定者へのダメージ
+DAMAGE TO ELITES AND BOSS	エリートと裁定者へのダメージ
+ABSORBS TO RECHARGE	再充填に必要な吸収数
+GRAZE ABSORB CHANCE	グレイズ吸収率
+ENERGY OF A GRAZED BULLET	グレイズ弾のエネルギー
+BONUS PER STORED BULLET	ストック 1 発あたりのボーナス
+HALF BEAM DAMAGE	ハーフビームの威力
+AFTERGLOW LASTS	残光の持続
+DAMAGE AT FULL STACKS	最大スタック時の威力
+SHOCKWAVE EVERY	衝撃波の間隔
+HP PER SECOND	毎秒回復
+ENERGY UNDER HALF HP	HP 半分以下の吸収エネルギー
+
+# ---- synergies
+GRAVITY WELL	グラビティウェル
+THUNDERSTORM	サンダーストーム
+ARCS HIT BURNING ENEMIES TWICE	燃えている敵にアークが 2 回当たる
+POISED	満を持して
+STORED BULLETS POWER THE HALF BEAM TOO	ストック弾がハーフビームも強化
+NO FADING STACKS DURING THE AFTERGLOW	残光中はスタックが減らない
+WEAKPOINT LOCK	ウィークポイントロック
+UNYIELDING	不屈
+UNDER HALF HP: MEND WITHOUT THE WAIT	HP 半分以下：リペアが待ち時間なし
+REVENGE	リベンジ
+THE REVIVE BLAST TAKES WHITE BULLETS TOO	復活の衝撃波が白弾もエネルギーに変える
+
+# ---- tactics, talents, hangar
+TALENT	タレント
+TALENTS	タレント
+DUAL	デュアル
+VETERAN	ベテラン
+BUFFER	バッファー
+LONG PIERCE	ロングピアス
+CHARGE	プリチャージ
+INVINCIBLE AFTER A HIT +8% / +16% / +25%	被弾後の無敵時間 +8% / +16% / +25%
+PIERCING BEAM LASTS +8% / +16% / +25%	貫通ビームの持続 +8% / +16% / +25%
+WAVES AND BOSS PHASES START WITH	各 WAVE と裁定者の各フェーズ開始時
+8% / 16% / 24% ENERGY	エネルギー 8% / 16% / 24% を持って開始
+RED: FIRE RATE +6% / +12% / +18%	赤：連射速度 +6% / +12% / +18%
+BLUE: ABSORB RANGE +6% / +12% / +18%	青：吸収範囲 +6% / +12% / +18%
++1 / +2 / +3 REROLLS ON THE PICK SCREEN	カード選択のリロール +1 / +2 / +3
+SHARDS	シャード
+LOCKED	未解放
+UNLOCKED	解放済み
+UNLOCK	解放
+NOT ENOUGH SHARDS	シャードが足りない
+SELECT	選択
+UNLOCKED {0} / {1}	解放 {0} / {1}
+NEXT UNLOCK	次の解放目標
+READY: H ON TITLE	解放可能：タイトルで H キー
+{0} MORE SHARDS	あと {0} シャード
+ALL UNLOCKED	すべて解放済み
+FREE	無料
+EQUIPPED	装備中
+OWNED	所持
+PUT BACK	外す
+TAKE ALONG	装備する
+POINT AT A TILE	タイルを選ぶと詳細を表示
+
+# ---- challenge levels, routes, boss practice
+STANDARD	スタンダード
+CHALLENGE {0}	チャレンジ {0}
+CHALLENGE BONUS	チャレンジボーナス
+CHALLENGE {0} UNLOCKED	チャレンジ {0} 解放
+BOSS PRACTICE	裁定者演習
+PRACTICE	演習
+BOSS FROM PHASE {0}	フェーズ {0} から開始
+USES YOUR LAST MODULES	前回のモジュールを使用
+NO SHARDS IN PRACTICE	演習ではシャードを得られない
+LEFT / RIGHT TO CHANGE	左 / 右で切替
+BULLETS +{0}%  SHARDS +{1}%	敵弾速度 +{0}%  シャード +{1}%
+MORE ELITES	エリート増加
+ELITES JOIN WAVES 3 AND 4	エリートが WAVE 3・4 に参戦
+CHOOSE YOUR ROUTE	ルートを選択
+CHOOSE YOUR REWARD	報酬を選択
+ROUTE	ルート
+ELITE FLEET	エリート艦隊
+SUPPLY RUN	補給ルート
+TWO MODULE PICKS	モジュールを 2 つ選べる
++1 HP AFTER THE WAVE	WAVE 終了時に HP +1
++30 HP AFTER THE WAVE	WAVE 終了時に HP +30
+NEEDS DAMAGE	被弾時のみ
+FULL HP	HP 満タン
+NOT ENOUGH HP	HP が足りない
+FORGE	鍛造
+WAGER	ベット
+A MODULE AND AN UPGRADE	モジュール 1 つと強化 1 回
+PAY 30% OF MAX HP	最大 HP の 30% を支払う
+RES ABSORB 2	吸収範囲 +{0}%
+RES ABSORB 3	{0} 回吸収ごとにアーク
+RES BREAK 2	ビームの消費エネルギー -{0}
+RES BREAK 3	ビーム終端が爆裂：{0} 発分
+RES SURVIVE 2	最大 HP +{0}
+RES SURVIVE 3	裁定者のフェーズごとに HP +{0}
+RES 2	2 つ
+RES 3	3 つ
+GAME	ゲーム
+AUDIO	サウンド
+CONTROLS	操作設定
+VSYNC	垂直同期
+FPS LIMIT	フレームレート上限
+NO LIMIT	制限なし
+SCREEN SHAKE	画面の揺れ
+FLASHES	フラッシュ
+MOUSE STEERING	マウス操作
+MOVE UP	上へ移動
+MOVE DOWN	下へ移動
+MOVE LEFT	左へ移動
+MOVE RIGHT	右へ移動
+RESET KEYS	キー設定を初期化
+PRESS A KEY	キーを押してください
+KEY SET	キーを設定しました
+KEYS RESET	キー設定を初期化しました
+HINT VSYNC	オンで画面のちらつきを防止。オフで遅延を軽減
+HINT FPS LIMIT	1 秒あたりの描画回数の上限。ゲームの処理は常に毎秒 60 回
+HINT SHOW FPS	右下にフレームレートを表示（F3 でも切替）
+HINT BACKGROUND	戦闘中の背景色の明るさ。弾の見やすさには影響しません
+HINT SCREEN SHAKE	被弾や爆発時の画面の揺れの強さ。0 でオフ
+HINT FLASHES	被弾や演出の白いフラッシュと色収差の強さ。0 でオフ
+HINT MOUSE STEERING	オフにすると自機はマウスに追従しません
+HINT RESET KEYS	すべての操作キーを初期値に戻します
+HINT KEY	ENTER の後に新しいキーを押す。重複時は入れ替え。ESC で取消
+OTHER DEVICES MOUSE	マウス：左=ショット　右=極性切替　中=貫通ビーム　サイド=タクティクス
+OTHER DEVICES PAD	パッド：A ショット　X 極性切替　Y 貫通ビーム　LT タクティクス
+CLEARS	クリア
+FASTEST CLEAR	最速クリア
+RECENT RUNS	最近の推移
+OPEN	開く
+OTHER RUNS	別の記録へ
+
+
+# ---- training stage, hangar page, mouse / gamepad settings, synergies (this build)
+RULES	ルール
+HANGAR AND MODULES	格納庫とモジュール
+TRAINING	トレーニング
+PICK ONE OF THREE AFTER A WAVE: THEY ARE FREE	ウェーブ後に3つから1つ選ぶ。モジュールは無料
+TWO OF A TYPE GIVE A BONUS, THREE A BIGGER ONE	同じ種類を2つでボーナス、3つでさらに大きなボーナス
+BOUGHT ONCE WITH SHARDS IN THE HANGAR, ONE PER RUN	格納庫でシャードで一度買えば、1回の出撃に1つ持ち込める
+USE IT WITH {0}	{0} で使う
+STAY FOR EVERY RUN: THREE LEVELS EACH	すべての出撃で有効。各3段階
+SOME PAIRS OF MODULES COMBINE: FOUND ONES ARE LISTED	2つのモジュールの組み合わせでシナジーが発動。発見済みは格納庫に表示
+PRESS {0} TO SWITCH RED / BLUE	{0} で赤と青を切り替え
+ENERGY FULL: PRESS {0}	エネルギー満タンで {0} を押す
+MOVE WITH {0}	{0} で移動
+FLY {0} / {1}	飛行 {0} / {1}
+SWITCHES {0} / {1}	切り替え {0} / {1}
+ABSORB {0} BULLETS OF YOUR COLOR	自機と同じ色の弾を {0} 発吸収
+ABSORBED {0} / {1}	吸収 {0} / {1}
+OTHER COLOR HURTS: SWITCH TO MATCH	違う色はダメージ。極性を切り替えて合わせよう
+THE BEAM BREAKS THE SHIELD	貫通ビームがシールドを破った
+A SHIELDED ELITE TAKES 25% LESS FROM SHOTS	シールド付きエリート：ショットのダメージ -25%
+DODGE THE WHITE BULLETS	白弾を避けろ
+DODGED {0} / {1}	回避 {0} / {1}
+WHITE CANNOT BE ABSORBED	白弾は吸収できない
+TRAINING COMPLETE	トレーニング完了
+PRESS ENTER TO PRACTISE AGAIN	ENTER でもう一度
+OWN BOTH IN ONE RUN	同じ出撃で両方のモジュールを持つと発動
+PRICE {0}	価格 {0}
+BUTTON SET	ボタンを設定した
+EXTRA BUTTONS	追加ボタン
+GAMEPAD CONNECTED	ゲームパッド接続中
+GAMEPAD RESET	ゲームパッドの設定を戻した
+MOUSE BUTTONS RESET	マウスボタンを戻した
+NO GAMEPAD FOUND	ゲームパッドが見つかりません
+PRESS A BUTTON	ボタンを押してください
+RESET GAMEPAD	ゲームパッドを初期化
+RESET MOUSE BUTTONS	マウスボタンを初期化
+STICK DEAD ZONE	スティックのデッドゾーン
+VIBRATION	振動
+MENUS ALWAYS USE ARROWS ENTER ESC	メニューは常に矢印キー・ENTER・ESC
+MENUS ALWAYS USE LEFT RIGHT CLICK	メニューは常にマウスの左右クリック
+MENUS ALWAYS USE A B START	メニューは常に A・B・START
+HINT DEAD ZONE	この値より小さい傾きは動かしていないものとして扱う。大きい：ドリフトに強い／小さい：敏感
+HINT MOUSE BUTTON	ENTER を押してから使いたいマウスボタンを押す。使用中のボタンはこの操作と入れ替わる。ESC で中止
+HINT PAD BUTTON	ENTER を押してからパッドのボタンを押す。使用中のボタンはこの操作と入れ替わる。ESC で中止
+HINT PAD EXTRA	ON：RT=ショット、LB=切り替え、RB=ビーム、B／スティック押し込み=タクティクス（そのボタンを別の操作に割り当てると無効）
+HINT RESET MOUSE	マウスボタンを初期設定に戻す
+HINT RESET PAD	パッドのボタン、振動、デッドゾーンを初期設定に戻す
+HINT VIBRATION	被弾と爆発のときのパッドの振動の強さ。0で無効。変更時に試験振動がある
+MIDDLE CLICK	中クリック
+SIDE 1	サイド1
+SIDE 2	サイド2
+NONE	なし
+MOVE KEYS	移動キー
+PULSE REACHES TWICE AS FAR AND GIVES UP TO 50% MORE ENERGY	衝撃波の範囲が2倍に。回収できるエネルギーの上限 +50%
+THE FIRE CALLS LIGHTNING: AN ARC EVERY 0.5 S, HARDER ON BURNING ENEMIES	炎が雷を呼ぶ：0.5秒ごとにアーク。燃えている敵にはもう1ヒット
+THE HALF BEAM USES THE STORED BULLETS TOO, BUT SPENDS ONLY HALF	ハーフビームも蓄えた弾を使い、消費は半分だけ
+THE END OF THE BEAM FILLS MOMENTUM, AND IT HOLDS DURING THE AFTERGLOW	ビーム終了でモメンタムが最大に。余韻の間は減らない
+FULL FOCUS: +25% DAMAGE, AND A NEW TARGET KEEPS HALF THE STACKS	フォーカス最大で+25%ダメージ。ターゲットが変わっても半分の層を保持
+UNDER HALF HP: MEND NEEDS NO WAIT AND REPAIRS 50% FASTER	HP半分未満：待たずに修復、速度 +50%
+THE REVIVE KEEPS HALF A BAR, AND ITS BLAST TAKES WHITE BULLETS TOO	復活時にエネルギー半分を保持。爆発は白弾も消す
+
+
+# ---- how to play (simplified), wave clear tag
+BASICS	基本
+{0}: RED / BLUE	{0}：赤と青を切り替え
+SAME: ABSORB	同色：吸収してエネルギーに
+OTHER: DAMAGE	違う色：ダメージ
+FULL ENERGY: {0}	エネルギー満タン：{0}
+WHITE: DODGE ONLY	白弾は吸収できない。避けるだけ
+DROP A DECOY: IT TAKES BULLETS OF YOUR COLOR	デコイを置く：自機と同じ色の弾を吸い寄せる
+DASH WHERE YOU MOVE: INVINCIBLE WHILE DASHING	移動方向へダッシュ：ダッシュ中は無敵
+HOLD TO CHARGE: A FULL CHARGE BREAKS AN OVERLOAD	長押しでチャージ：満タンでオーバーロードを止める
+REPAIR +{0}	修理 +{0}
+
+
+# ---- audio page (version 2 of the audio system)
+MASTER VOLUME	マスター音量
+CUE EMPHASIS	警告音の強調
+LOW HP HEARTBEAT	低HPの鼓動
+MUTE IN BACKGROUND	バックグラウンドでミュート
+HINT MASTER VOLUME	すべての音の音量
+HINT CUE EMPHASIS	白弾の予告、オーバーロードの警報、オーバーロード撃破などの合図の音量。高いほど、合図が鳴る間ほかの音を大きく下げる
+HINT HEARTBEAT	HPがごくわずかのとき、鼓動の音がして、音楽の高音が少し抑えられる
+HINT MUTE IN BACKGROUND	ON：ウィンドウが前面にないとき無音。OFF：音は鳴り続ける
+
+
+# ---- game over: how far the run came
+MISSION COMPLETE	任務達成率
+BOSS DOWN	裁定者を削った
+{0}% TO GO	あと {0}%
+WAVES	WAVE
+BOSS	裁定者
+{0} WAVES TO THE BOSS	裁定者まであと {0} WAVE
+LAST WAVE BEFORE THE BOSS	裁定者の前、最後の WAVE
+PHASE {0} IS {1}% AWAY	あと {1}% でフェーズ {0}
+ONLY {0}% OF THE BOSS IS LEFT	裁定者の残りはあと {0}%
+BEST {0}%	ベスト {0}%
+NEW BEST +{0}%	自己ベスト +{0}%
+NEW HIGH SCORE	ハイスコア更新

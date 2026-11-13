@@ -1,0 +1,491 @@
+# key<TAB>translation. Keys are the English texts used in the code; a missing key falls back to the English text.
+# {0} / {1} are replaced by numbers. Glossary: see tools/lang_table.py.
+__name	简体中文
+
+# ---- title, how to play, settings
+START GAME	开始游戏
+HOW TO PLAY	玩法说明
+RECORDS	战绩
+SETTINGS	设置
+EXIT	退出游戏
+HANGAR	机库
+ENTER / LEFT CLICK	ENTER / 左键
+SWITCH	切换
+ABSORB	吸收
+BREAK	突破
+SURVIVE	生存
+BASIC CONTROLS	操作
+CORE GAMEPLAY	规则
+MOVE	移动
+SHOT	射击
+SPECIAL	贯穿光束
+TACTIC	战术
+TACTICS	战术
+PAUSE	暂停
+SWITCH POLARITY	切换极性
+SWITCH COLOR	切换极性
+PRESS C TO CHANGE BLUE OR RED	按 C 在红蓝之间切换
+RIGHT CLICK TO CHANGE BLUE OR RED	右键在红蓝之间切换
+PRESS X TO CHANGE BLUE OR RED	按 X 在红蓝之间切换
+MATCH BULLET COLOR	同色吸收
+MATCH THE BULLET COLOR TO ABSORB IT	与敌弹同色即可吸收
+SAME COLOR = ABSORB ENERGY	同色：吸收并化为能量
+OTHER COLOR = TAKE DAMAGE	异色：受到伤害
+WRONG COLOR HURTS	异色即受伤
+USE SPECIAL ATTACK	发射贯穿光束
+FIRE SPECIAL	发射贯穿光束
+ENERGY FULL = PRESS V	能量充满后按 V
+ENERGY FULL = MIDDLE CLICK / SIDE 2	能量充满后按中键 / 侧键 2
+ENERGY FULL = PRESS Y	能量充满后按 Y
+ENERGY READY	能量充满
+ENERGY NOT FULL: DODGE IT	能量未满：先躲开
+WHITE BULLETS	白弹
+CANNOT BE ABSORBED: DODGE THEM	无法吸收，只能闪避
+FIRED BY SNIPERS AND THE BOSS	由狙击机与裁决者发射
+WHITE BEAM: BREAKS SHIELDS AND OVERLOADS	贯穿光束：击穿护盾，打断过载
+THE WHITE BEAM BREAKS THE SHIELD	贯穿光束可击穿护盾
+ELITES	精英
+GOLD CORNERS AND A SHIELD: SHOTS DO 25% LESS	金色边角，带护盾：射击伤害 -25%
+ENTER TO START	按 ENTER 出击
+LEFT CLICK TO START	左键出击
+PRESS A TO START	按 A 出击
+ESC OR RIGHT CLICK TO BACK	ESC / 右键 返回
+ESC OR RIGHT CLICK	ESC / 右键 返回
+PRESS B TO BACK	按 B 返回
+KEYBOARD	键盘
+MOUSE	鼠标
+GAMEPAD	手柄
+CURSOR	光标
+LEFT CLICK	左键
+RIGHT CLICK	右键
+MIDDLE / SIDE 2	中键 / 侧键 2
+SIDE BUTTON 1	侧键 1
+PAUSE BUTTON	右上角按钮
+L STICK	左摇杆
+DISPLAY	画面
+SOUND	声音
+DISPLAY MODE	显示模式
+RESOLUTION	分辨率
+WINDOWED	窗口
+FULLSCREEN	全屏
+LANGUAGE	语言
+BACKGROUND	背景亮度
+BGM VOLUME	音乐音量
+SE VOLUME	音效音量
+SHOW FPS	显示帧率
+ON	开
+OFF	关
+APPLY	应用
+BACK	返回
+SETTINGS APPLIED	设置已生效
+CHANGES APPLY AT ONCE	修改即时生效
+DISPLAY CHANGE FAILED	画面设置未能生效
+
+# ---- records
+HIGH SCORE	最高分
+PLAY COUNT	出击次数
+CLEAR COUNT	通关次数
+RUN LOG	出击记录
+NO RUNS YET	尚无出击记录
+CLEARED	通关
+DEFEATED	被击坠
+ABANDONED	中途撤离
+BOSS PHASE {0}	裁决者 第 {0} 阶段
+DETAIL	详情
+DATE	日期
+MODE	模式
+RESULT	结果
+HITS TAKEN	被击中
+SELECT / PAGE	选择 / 翻页
+BEST STREAK	最高连击
+NEW BEST	新纪录
+
+# ---- pause, results
+RESUME	继续
+RESTART	重新出击
+TITLE	返回标题
+ESC TO RESUME	按 ESC 继续
+ESC TO BACK	按 ESC 返回
+GAME CLEAR	任务完成
+GAME OVER	任务失败
+RANK	评级
+SCORE	得分
+NEW RUN	新的出击
+ENTER OR CLICK	ENTER / 点击
+PLAY AGAIN	再次出击
+REACHED WAVE {0}	抵达第 {0} 波
+REACHED BOSS PHASE {0}	抵达裁决者第 {0} 阶段
+TIME	用时
+WAVES CLEARED	突破波次
+REACHED THE BOSS	抵达裁决者
+BOSS PHASES	裁决者阶段
+BOSS DEFEATED	击破裁决者
+ABSORBS	吸收数
+HP	生命
+MAX COMBO	最高连击
++{0} SHARDS	+{0} 晶片
+
+# ---- battle
+WAVE {0}	第 {0} 波
+WAVE CLEAR	本波突破
+CLEARED {0}%	清剿 {0}%
+BOSS APPROACHING	裁决者接近中
+WARNING	警告
+HIGH ENERGY SIGNATURE DETECTED	侦测到高能反应
+COMBO	连击
+STREAK	连击
+CHAIN {0}%	连吸效率 {0}%
+READY	就绪
+ARBITER	裁决者
+PHASE {0}	第 {0} 阶段
+AWAKENING	觉醒
+SPLIT	分离
+CORE	核心
+OVERLOAD	过载蓄能 · 以贯穿光束打断
+BREAK THE OVERLOAD = DAMAGE WINDOW	以贯穿光束打断过载：伤害 ×1.5
+BREAK!	击破！
+BROKEN	破绽 · 伤害 ×1.5
+SHELL CLOSED: SHOOT THE DRONES	护壳闭合：先击坠无人机
+THE HULL ENDS THE PHASE	击破舰体即可结束本阶段
+SHOT-DOWN DRONES COME BACK	被击坠的无人机会重新出击
+DOWN BOTH DRONES TO OPEN THE CORE	击坠两架无人机，开启核心护壳
+
+# ---- modules: pick screen
+MODULES	模块
+NO MODULES	无模块
+CHOOSE A MODULE	选择模块
+PICK ONE OF THREE	三选一
+PRESS 1 2 3 OR CLICK	按 1 2 3 或点击选择
+PRESS 1 2 OR CLICK	按 1 2 或点击选择
+NEW MODULE	新模块
+NO NEW MODULE	无新模块
+ONLY ONE NEW MODULE	仅获得 1 个新模块
+UPGRADE	强化
+UPGRADE A MODULE	强化一个模块
+UPGRADE TO LEVEL {0}	强化至 {0} 级
+TWO MODULE UPGRADES	强化两个模块
+NOTHING TO UPGRADE	没有可强化的模块
+BIGGER EFFECTS, LOWER COSTS	效果更强，代价更小
+LEVEL {0}	{0} 级
+LEVEL {0} / {1}	等级 {0} / {1}
+MAX LEVEL	已满级
+REROLL	刷新
+NO REROLL LEFT IN THIS RUN	本局刷新次数已用尽
+NEW CARDS. THE ONES ON OFFER DO NOT COME BACK	重新发牌，当前的卡不会再出现
+AN UPGRADE AMONG THE CARDS	卡牌中必有一次强化
+NO DRAWBACK	无代价
+RESONANCE	共鸣
+2 / 3 OF A TYPE: A BONUS EACH	同类模块凑齐 2 个 / 3 个，各得一次加成
+SYNERGY	协同
+NEW SYNERGY	发现协同
+{0} SYNERGIES TO DISCOVER	尚有 {0} 种协同待发现
+{0} MORE TO DISCOVER	另有 {0} 种未发现
+
+# ---- modules: names
+SIPHON	虹吸
+ECHO	回响
+EMBER	余烬
+BACKUP CORE	备用核心
+PULSE	脉冲
+OVERFLOW	溢能
+MOMENTUM	动能
+BREACH	破甲
+AEGIS	神盾
+MEND	修复
+DEFLECT	偏折
+TWIN	二连
+AFTERGLOW	余晖
+FOCUS	聚焦
+BACKWATER	背水
+DECOY	诱饵
+DASH	相位冲刺
+CHARGE SHOT	蓄压射击
+
+# ---- modules: effects and costs
+ABSORB RANGE +90%	吸收范围 +90%
+EVERY 4 ABSORBS: AN ARC	每吸收 4 发：释放一道电弧
+THE ARC JUMPS TO 2 MORE ENEMIES	电弧再跃向 2 个敌人
+40%+ ENERGY: ABSORBS FIRE ARCS	能量 40% 以上：每次吸收都放出电弧
+FULL BAR: ABSORBED BULLETS ARE STORED	能量满格时，吸收的敌弹将被储存
+EACH: NEXT BEAM +4% DAMAGE AND LENGTH	每发：下次贯穿光束伤害与时长 +4%
+FIRE BAND AFTER SPECIAL	贯穿光束过后，留下 2 秒火焰带
+THE FIRE BURNS BULLETS INTO ENERGY	火焰将敌弹燃成能量
+REVIVE ONCE WITH HALF THE HP	复活一次，恢复一半生命
+AND A BLAST OVER THE WHOLE SCREEN	并释放全屏冲击
+ENERGY RESETS	复活后能量清零
+EVERY 6 S A SHOCKWAVE: BULLETS TO ENERGY	每 6 秒释放冲击波，将周围敌弹化为能量
+BODY HITS -25%, A HIT BRINGS IT SOONER	撞击伤害 -25%，受击后冲击波提前
+PULSE REACHES TWICE AS FAR	脉冲范围扩大约一倍
+EACH ABSORB: FIRE RATE +8%, MAX +64%	每次吸收：射速 +8%（最高 +64%）
+STACKS FADE AFTER 4 SECONDS	4 秒未吸收，层数逐步消退
+IGNORES ALL DAMAGE REDUCTION	无视一切减伤
+ELITE SHIELDS, BOSS RESISTANCE	精英护盾、裁决者抗性
+BLOCKS ONE WHITE BULLET OR BEAM	抵挡一次白弹或光束
+RECHARGES EVERY 40 ABSORBS	每吸收 40 发充能一次
+5 S WITHOUT A HIT: 1 HP EVERY 1.5 S	5 秒未受击后，每 1.5 秒恢复 1 点生命
+WHITE BULLETS THAT GRAZE: 85% ABSORBED	擦弹的白弹 85% 被吸收
+HALF BAR: A HALF BEAM	半格能量：释放半道光束
+IT COSTS HALF A BAR, 75% DAMAGE	消耗半格能量，伤害 75%
+AFTER THE BEAM: FIRE RATE +40%	贯穿光束过后：射速 +40%
+AND SHOT DAMAGE +40% FOR 4 S	射击伤害 +40%，持续 4 秒
+HITS ON ONE TARGET: +4% EACH	连续命中同一目标：每发 +4%
+UP TO +40%, RESET ON A NEW TARGET	最高 +40%，更换目标即重置
+FULL FOCUS: ANOTHER +25% DAMAGE	聚焦满层：伤害再 +25%
+UNDER HALF HP: ABSORB ENERGY +20%	生命低于一半：吸收能量 +20%
+TACTIC KEY: DROP A DECOY	战术键：投放诱饵
+IT PULLS AND ABSORBS BULLETS OF YOUR COLOR	吸引并吸收与你同色的敌弹
+TACTIC KEY: DASH WHERE YOU MOVE	战术键：朝移动方向冲刺
+INVINCIBLE WHILE DASHING, 2.5 S COOLDOWN	冲刺中无敌，冷却 2.5 秒
+HOLD THE TACTIC KEY: CHARGE A BEAM	按住战术键：蓄能光束
+A FULL CHARGE BREAKS AN OVERLOAD	满蓄能可打断过载
+MAX HP -10%	生命上限 -10%
+MAX HP -15%	生命上限 -15%
+MAX HP -1	初始生命 -1
+MAX HP -20	初始生命 -20
+ABSORB ENERGY -10%	每发吸收能量 -10%
+ABSORB ENERGY -15%	每发吸收能量 -15%
+ENERGY LEAKS WHEN IDLE	3 秒未吸收，能量缓慢流失
+20 ABSORBS = +1 HP	吸收 20 发恢复 1 点生命
+ONCE PER WAVE	每波限一次
+BEAM NEEDS 15 LESS, LONGER INVINCIBILITY	贯穿光束所需能量 -15，无敌时间更长
+A LONGER BEAM DEALS MORE DAMAGE	光束越长，伤害越高
+MORE TIME TO GET AWAY AFTER A HIT	受击后有更多时间脱身
+AND THEY GIVE TRIPLE ENERGY	且获得 3 倍能量
+
+# ---- modules: the numbers of an upgrade
+ABSORB RANGE	吸收范围
+FLAMES LAST	火焰持续
+REVIVE WITH	复活时生命
+ARC DAMAGE	电弧伤害
+ARC TARGETS	电弧目标数
+FIRE RATE AT FULL STACKS	满层射速
+DAMAGE TO THE BOSS	对裁决者伤害
+DAMAGE TO ELITES AND BOSS	对精英与裁决者伤害
+ABSORBS TO RECHARGE	充能所需吸收数
+GRAZE ABSORB CHANCE	擦弹吸收率
+ENERGY OF A GRAZED BULLET	擦弹能量倍率
+BONUS PER STORED BULLET	每发储存弹加成
+HALF BEAM DAMAGE	半道光束伤害
+AFTERGLOW LASTS	余晖持续
+DAMAGE AT FULL STACKS	满层伤害
+SHOCKWAVE EVERY	冲击波间隔
+HP PER SECOND	每秒恢复
+ENERGY UNDER HALF HP	半血以下吸收能量
+
+# ---- synergies
+GRAVITY WELL	引力井
+THUNDERSTORM	雷暴
+ARCS HIT BURNING ENEMIES TWICE	电弧对燃烧中的敌人追加一击
+POISED	蓄势待发
+STORED BULLETS POWER THE HALF BEAM TOO	储存弹同样强化半道光束
+NO FADING STACKS DURING THE AFTERGLOW	余晖期间射速层数不衰减
+WEAKPOINT LOCK	弱点锁定
+UNYIELDING	不屈
+UNDER HALF HP: MEND WITHOUT THE WAIT	半血以下：修复无需等待
+REVENGE	复仇之光
+THE REVIVE BLAST TAKES WHITE BULLETS TOO	复活冲击亦可化白弹为能量
+
+# ---- tactics, talents, hangar
+TALENT	天赋
+TALENTS	天赋
+DUAL	双相
+VETERAN	老兵
+BUFFER	缓冲层
+LONG PIERCE	长程贯穿
+CHARGE	预充能
+INVINCIBLE AFTER A HIT +8% / +16% / +25%	受击后无敌时间 +8% / +16% / +25%
+PIERCING BEAM LASTS +8% / +16% / +25%	贯穿光束持续 +8% / +16% / +25%
+WAVES AND BOSS PHASES START WITH	每一波与每个裁决者阶段开始时
+8% / 16% / 24% ENERGY	自带 8% / 16% / 24% 能量
+RED: FIRE RATE +6% / +12% / +18%	红色：射速 +6% / +12% / +18%
+BLUE: ABSORB RANGE +6% / +12% / +18%	蓝色：吸收范围 +6% / +12% / +18%
++1 / +2 / +3 REROLLS ON THE PICK SCREEN	选卡时刷新次数 +1 / +2 / +3
+SHARDS	晶片
+LOCKED	未解锁
+UNLOCKED	已解锁
+UNLOCK	解锁
+NOT ENOUGH SHARDS	晶片不足
+SELECT	选择
+UNLOCKED {0} / {1}	已解锁 {0} / {1}
+NEXT UNLOCK	下一个解锁目标
+READY: H ON TITLE	可解锁：在标题画面按 H
+{0} MORE SHARDS	还差 {0} 晶片
+ALL UNLOCKED	已全部解锁
+FREE	免费
+EQUIPPED	已携带
+OWNED	已拥有
+PUT BACK	卸下
+TAKE ALONG	携带
+POINT AT A TILE	指向格子查看详情
+
+# ---- challenge levels, routes, boss practice
+STANDARD	标准
+CHALLENGE {0}	挑战 {0}
+CHALLENGE BONUS	挑战加成
+CHALLENGE {0} UNLOCKED	已解锁挑战 {0}
+BOSS PRACTICE	裁决者演练
+PRACTICE	演练
+BOSS FROM PHASE {0}	从第 {0} 阶段开始
+USES YOUR LAST MODULES	沿用上一局的模块
+NO SHARDS IN PRACTICE	演练不获得晶片
+LEFT / RIGHT TO CHANGE	左 / 右 切换
+BULLETS +{0}%  SHARDS +{1}%	敌弹速度 +{0}%  晶片 +{1}%
+MORE ELITES	精英增多
+ELITES JOIN WAVES 3 AND 4	精英加入第 3、4 波
+CHOOSE YOUR ROUTE	选择航线
+CHOOSE YOUR REWARD	选择报酬
+ROUTE	航线
+ELITE FLEET	精英舰队
+SUPPLY RUN	补给航线
+TWO MODULE PICKS	可选 2 个模块
++1 HP AFTER THE WAVE	本波结束恢复 1 点生命
++30 HP AFTER THE WAVE	本波结束恢复 30 点生命
+NEEDS DAMAGE	需已受伤
+FULL HP	生命已满
+NOT ENOUGH HP	生命不足
+FORGE	锻造
+WAGER	孤注
+A MODULE AND AN UPGRADE	一个模块，外加一次强化
+PAY 30% OF MAX HP	支付生命上限的 30%
+RES ABSORB 2	吸收范围 +{0}%
+RES ABSORB 3	每吸收 {0} 发放出电弧
+RES BREAK 2	光束所需能量 -{0}
+RES BREAK 3	光束尾端爆裂：{0} 发伤害
+RES SURVIVE 2	生命上限 +{0}
+RES SURVIVE 3	每个裁决者阶段 +{0} 生命
+RES 2	2 个
+RES 3	3 个
+GAME	游戏
+AUDIO	声音
+CONTROLS	按键
+VSYNC	垂直同步
+FPS LIMIT	帧率上限
+NO LIMIT	不限制
+SCREEN SHAKE	屏幕震动
+FLASHES	闪光与色差
+MOUSE STEERING	鼠标操控
+MOVE UP	向上移动
+MOVE DOWN	向下移动
+MOVE LEFT	向左移动
+MOVE RIGHT	向右移动
+RESET KEYS	恢复默认按键
+PRESS A KEY	请按下按键
+KEY SET	按键已设置
+KEYS RESET	已恢复默认按键
+HINT VSYNC	开启后画面与显示器同步，不会撕裂；关闭可降低延迟
+HINT FPS LIMIT	限制每秒画面帧数：越低越省电、越安静。游戏逻辑始终是 60 次 / 秒
+HINT SHOW FPS	在右下角显示帧率与帧时间（F3 同样可用）
+HINT BACKGROUND	战斗背景的红蓝色块有多亮，不影响读弹
+HINT SCREEN SHAKE	受击与爆炸时画面的抖动幅度，0 为关闭
+HINT FLASHES	受击与演出的白色闪光和色差强度，0 为关闭
+HINT MOUSE STEERING	关闭后，飞机不再跟随鼠标，只用按键或手柄移动
+HINT RESET KEYS	把所有操作按键恢复为默认值
+HINT KEY	ENTER 后按下新的按键；按键冲突时两个动作互换位置；ESC 取消
+OTHER DEVICES MOUSE	鼠标：左键 射击 · 右键 切换极性 · 中键 贯穿光束 · 侧键 战术
+OTHER DEVICES PAD	手柄：A 射击 · X 切换极性 · Y 贯穿光束 · LT 战术
+CLEARS	通关
+FASTEST CLEAR	最快通关
+RECENT RUNS	近期趋势
+OPEN	查看
+OTHER RUNS	切换对局
+
+
+# ---- training stage, hangar page, mouse / gamepad settings, synergies (this build)
+RULES	规则
+HANGAR AND MODULES	机库与模块
+TRAINING	训练
+PICK ONE OF THREE AFTER A WAVE: THEY ARE FREE	每波结束后三选一，模块免费
+TWO OF A TYPE GIVE A BONUS, THREE A BIGGER ONE	同类两个有加成，三个加成更大
+BOUGHT ONCE WITH SHARDS IN THE HANGAR, ONE PER RUN	在机库用晶片购买一次，每局携带一个
+USE IT WITH {0}	用 {0} 使用
+STAY FOR EVERY RUN: THREE LEVELS EACH	每局永久生效，每项三级
+SOME PAIRS OF MODULES COMBINE: FOUND ONES ARE LISTED	部分模块两两组合会产生协同，已发现的会列在机库
+PRESS {0} TO SWITCH RED / BLUE	按 {0} 在红蓝之间切换
+ENERGY FULL: PRESS {0}	能量充满后按 {0}
+MOVE WITH {0}	用 {0} 移动
+FLY {0} / {1}	已飞行 {0} / {1}
+SWITCHES {0} / {1}	已切换 {0} / {1}
+ABSORB {0} BULLETS OF YOUR COLOR	吸收 {0} 发与自机同色的子弹
+ABSORBED {0} / {1}	已吸收 {0} / {1}
+OTHER COLOR HURTS: SWITCH TO MATCH	异色会受伤：切换极性来匹配
+THE BEAM BREAKS THE SHIELD	贯穿光束击穿了护盾
+A SHIELDED ELITE TAKES 25% LESS FROM SHOTS	带护盾的精英：射击伤害 -25%
+DODGE THE WHITE BULLETS	躲开白弹
+DODGED {0} / {1}	已躲开 {0} / {1}
+WHITE CANNOT BE ABSORBED	白弹无法吸收
+TRAINING COMPLETE	训练完成
+PRESS ENTER TO PRACTISE AGAIN	按 ENTER 再练一次
+OWN BOTH IN ONE RUN	同一局内持有这两个模块即可触发
+PRICE {0}	价格 {0}
+BUTTON SET	按键已设置
+EXTRA BUTTONS	附加按键
+GAMEPAD CONNECTED	已连接手柄
+GAMEPAD RESET	手柄设置已重置
+MOUSE BUTTONS RESET	鼠标按键已重置
+NO GAMEPAD FOUND	未检测到手柄
+PRESS A BUTTON	请按一个键
+RESET GAMEPAD	重置手柄设置
+RESET MOUSE BUTTONS	重置鼠标按键
+STICK DEAD ZONE	摇杆死区
+VIBRATION	震动
+MENUS ALWAYS USE ARROWS ENTER ESC	菜单始终使用方向键、ENTER、ESC
+MENUS ALWAYS USE LEFT RIGHT CLICK	菜单始终使用鼠标左键、右键
+MENUS ALWAYS USE A B START	菜单始终使用 A、B、START
+HINT DEAD ZONE	摇杆偏移小于此值时视为没有推动。大：不易漂移；小：更灵敏。
+HINT MOUSE BUTTON	按 ENTER，再按要用的鼠标按键。已被占用的按键会与这个动作互换。ESC 取消。
+HINT PAD BUTTON	按 ENTER，再按手柄上的按键。已被占用的按键会与这个动作互换。ESC 取消。
+HINT PAD EXTRA	开：RT 射击、LB 切换、RB 光束、B / 摇杆按下为战术（该键绑定了别的动作时失效）。
+HINT RESET MOUSE	把鼠标按键恢复为默认。
+HINT RESET PAD	把手柄按键、震动和死区恢复为默认。
+HINT VIBRATION	受击与爆炸时手柄的震动强度，0 为关闭。调节时会震动一下作为试验。
+MIDDLE CLICK	中键
+SIDE 1	侧键 1
+SIDE 2	侧键 2
+NONE	无
+MOVE KEYS	移动键
+PULSE REACHES TWICE AS FAR AND GIVES UP TO 50% MORE ENERGY	冲击波范围翻倍，回收的能量上限 +50%
+THE FIRE CALLS LIGHTNING: AN ARC EVERY 0.5 S, HARDER ON BURNING ENEMIES	火焰引来雷电：每 0.5 秒一道电弧，对燃烧中的敌人多打一次
+THE HALF BEAM USES THE STORED BULLETS TOO, BUT SPENDS ONLY HALF	半束光束也会用上储存的子弹，且只消耗一半
+THE END OF THE BEAM FILLS MOMENTUM, AND IT HOLDS DURING THE AFTERGLOW	光束结束时势头层数直接叠满，余晖期间不衰减
+FULL FOCUS: +25% DAMAGE, AND A NEW TARGET KEEPS HALF THE STACKS	聚焦满层 +25% 伤害，换目标时保留一半层数
+UNDER HALF HP: MEND NEEDS NO WAIT AND REPAIRS 50% FASTER	生命低于一半：修复无需等待，速度 +50%
+THE REVIVE KEEPS HALF A BAR, AND ITS BLAST TAKES WHITE BULLETS TOO	复活后保留半条能量，爆发也会清除白弹
+
+
+# ---- how to play (simplified), wave clear tag
+BASICS	基本
+{0}: RED / BLUE	{0}：红蓝切换
+SAME: ABSORB	同色：吸收成能量
+OTHER: DAMAGE	异色：受伤
+FULL ENERGY: {0}	能量满：按 {0}
+WHITE: DODGE ONLY	白弹吸收不了，只能躲开
+DROP A DECOY: IT TAKES BULLETS OF YOUR COLOR	放置诱饵：吸引并吸收同色子弹
+DASH WHERE YOU MOVE: INVINCIBLE WHILE DASHING	朝移动方向冲刺：冲刺中无敌
+HOLD TO CHARGE: A FULL CHARGE BREAKS AN OVERLOAD	按住蓄能：蓄满可打断过载
+REPAIR +{0}	修复 +{0}
+
+
+# ---- audio page (version 2 of the audio system)
+MASTER VOLUME	总音量
+CUE EMPHASIS	提示音强化
+LOW HP HEARTBEAT	低血量心跳
+MUTE IN BACKGROUND	切到后台时静音
+HINT MASTER VOLUME	所有声音的总音量。
+HINT CUE EMPHASIS	白弹预警、过载警报、打断过载等关键提示的音量，数值越高，提示响起时压低其他声音越多。
+HINT HEARTBEAT	血量很低时出现心跳声，并略微压低音乐的高频。
+HINT MUTE IN BACKGROUND	开：窗口不在最前面时静音。关：声音继续播放。
+
+
+# ---- game over: how far the run came
+MISSION COMPLETE	任务完成度
+BOSS DOWN	裁决者已削减
+{0}% TO GO	还差 {0}%
+WAVES	波次
+BOSS	裁决者
+{0} WAVES TO THE BOSS	距裁决者还有 {0} 波
+LAST WAVE BEFORE THE BOSS	裁决者之前的最后一波
+PHASE {0} IS {1}% AWAY	再削 {1}% 即进入第 {0} 阶段
+ONLY {0}% OF THE BOSS IS LEFT	裁决者只剩 {0}%
+BEST {0}%	最佳 {0}%
+NEW BEST +{0}%	新纪录 +{0}%
+NEW HIGH SCORE	新最高分
