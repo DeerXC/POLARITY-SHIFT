@@ -286,6 +286,9 @@ LRESULT CALLBACK WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM 
         DisplaySystem::OnActivate(LOWORD(wParam) != WA_INACTIVE);
         GameAudio::OnWindowActivate(LOWORD(wParam) != WA_INACTIVE); // the audio stops at once when the window is left
         break;
+    case WM_DISPLAYCHANGE:
+        DisplaySystem::OnDisplayChange(); // (the screen changed its size or was swapped: the back buffer follows it, the sizes on offer are worked out again)
+        break;
     case WM_ERASEBKGND:
         return 1;
 
@@ -317,5 +320,6 @@ LRESULT CALLBACK WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM 
 
     return DefWindowProcA(windowHandle, message, wParam, lParam);
 }
+
 
 

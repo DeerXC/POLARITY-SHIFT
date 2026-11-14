@@ -9,10 +9,11 @@ A 2D horizontal shooter: the ship absorbs bullets of its own polarity (red / blu
 main.cpp ─ Game (scene switch, frame loop, fixed 60 Hz step + render interpolation)
 │
 ├─ src/core      platform, rendering and audio (knows nothing about the game)
-│   DirectX        device, swap chain, the 16:9 game rectangle on any screen shape (GetGameRect)
+│   DirectX        device, swap chain (the back buffer is always the size of the screen), the 16:9 game rectangle on any screen shape (GetGameRect), the render size (SetRenderSize)
+│   DisplayMath    the arithmetic of the display with no Windows in it: the 16:9 rectangle in any screen, the sizes on offer, the Lanczos scale-down (tested on 19 monitor shapes)
 │   Renderer2D     batched sprites / quads / convex polygons, premultiplied alpha, additive draws grouped by texture
 │   TextureLoader  PNG -> premultiplied RGBA8 texture with a GPU mip chain (WIC decode, written for this project)
-│   PostFx         HDR scene target -> bloom (5-level dual filter) -> grade / lens / danger -> back buffer; fills non-16:9 bars
+│   PostFx         HDR scene target -> bloom (5-level dual filter) -> grade / lens / danger -> back buffer; fills non-16:9 bars; scales a supersampled picture down
 │   TextRenderer   Direct2D / DirectWrite text over the picture
 │   DisplaySystem  windowed / full screen, resolutions
 │   GameAudio      XAudio2 engine; AudioLogic / AudioHeat / AudioMap are its plain C++ logic (see "Audio")
@@ -48,16 +49,22 @@ The two biggest systems, the boss and the enemies, are split in two: `GameBoss.c
 
 ## Rendering pipeline (one frame)
 
-1. `PostFx::BeginScene` binds the HDR target (R16G16B16A16_FLOAT, the size of the 16:9 game rectangle).
+1. `PostFx::BeginScene` binds the HDR target (R16G16B16A16_FLOAT, the render size: the size of the 16:9 game rectangle, or larger for a supersample).
 2. World: background → enemies → boss → effects → enemy bullets → ship, through `Renderer2D` (one draw call per texture / blend run;
    additive draws are order-independent and are grouped by texture: 50–230 batches a frame become a handful).
 3. `PostFx::EndScene`: bright-pass → 5 downsamples → 5 upsamples (additive) → composite (exposure, soft shoulder, saturation,
    contrast, tint, vignette, chromatic aberration only as a short kick, grain, danger edge) → back buffer; on a 16:10 / 21:9 screen
    `PSFill` first fills the bars with a dark extension of the picture and the seam hairlines.
-4. Text (DirectWrite) on top, then Present.
+4. Text (DirectWrite) on top, at the size of the screen, then Present.
 
 Blending is premultiplied everywhere: `TextureLoader` stores premultiplied texels, `shader_pixel_2d.hlsl` premultiplies the vertex tint, the blend states are `ONE, INV_SRC_ALPHA` (alpha) and `ONE, ONE` (additive).
-Shaders are compiled at build time (FxCompile, shader model 5.0) into `.cso` files next to the program: `shader_vertex_2d / shader_pixel_2d` and `postfx_{vs, prefilter, down, up, composite, fill}` (all from `shaders/postfx.hlsli`).
+Shaders are compiled at build time (FxCompile, shader model 5.0) into `.cso` files next to the program: `shader_vertex_2d / shader_pixel_2d` and `postfx_{vs, prefilter, down, up, composite, fill, resample_h, resample_v}` (all from `shaders/postfx.hlsli`).
+
+### Three sizes: output, game, render
+
+- **Output** is the back buffer: the pixels of the window or of the screen. It is never scaled by Windows (a back buffer that is not the size of the window is stretched by the desktop with a plain bilinear filter, which made a 4K picture on a 1440p screen *softer* than a 1440p one: a line one pixel wide came out at a quarter of its brightness). The text is drawn at this size, so it is always sharp.
+- **Game** is the largest 16:9 rectangle in the output, in its middle; the rest of a 16:10 or 21:9 screen is filled by `PostFx` (`DisplayMath::GameRect`, shared by the swap chain, the text and the mouse).
+- **Render** is the size of the picture of the world. It equals the game rectangle, or is larger (the RESOLUTION setting in full screen, up to twice the screen: a supersample). A larger picture is graded at its size, then scaled down by two Lanczos passes in *linear light* (`PSResampleH`, `PSResampleV`: the graded picture is read as an sRGB texture, the middle target is float, the last pass writes the sRGB encoding with a triangular dither). `tools/balance_sim/display_test.cpp` tests the arithmetic and the filter (`DisplayMath::ResampleAxis` is the CPU twin of the shader).
 
 ## Beams (`game/BeamFx`)
 
@@ -94,6 +101,7 @@ The game logic runs at a fixed 60 Hz step; rendering interpolates between the la
 | `boss_hit_test`, `boss_p2_test`, `boss_score_test` | the real boss, frozen or driven: every phase can be hurt by plain shots; the drones of phase 2; the score that the boss pays by its bar |
 | `step_b_test`, `pick_test`, `upgrade_test`, `module_fx_test` | the waves, the elites and the twin rivals; the module picks; the module upgrades; the state behind the module effects |
 | `abandon_test`, `save_test` | a run that is left keeps its score; the real save code against files |
+| `display_test` | the display arithmetic on 19 monitor shapes (1366 x 768 to 5120 x 1440, 16:10, 21:9, portrait): the game rectangle, the sizes on offer, the mouse, and the filter of the scale-down |
 | `layout_check` | do the texts of the modules fit the cards, in every language |
 | `audio/test_audio_logic`, `audio/test_heat_floor` | the plain C++ part of the audio engine |
 | `audio/engine_test` | the real `GameAudio.cpp` against a mock of XAudio2 |
@@ -122,3 +130,5 @@ The source images of the sprites (the models and their renders) are not in this 
 ## Known issues
 
 - `boss_break_test`: four checks about the ram lane that leans fail, as they did before the code was split in two. It is kept out of `make test` (`make -C tools known-failing` runs it).
+- The process is DPI aware for the system, not per monitor: a window dragged to a screen with another scaling is stretched by Windows.
+- The sizes of the windowed mode start at 1280 x 720: on a screen with a work area under about 760 lines (a 1366 x 768 laptop) that window does not fit; use full screen there.

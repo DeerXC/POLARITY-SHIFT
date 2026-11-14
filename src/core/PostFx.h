@@ -7,7 +7,9 @@
 //   GRADE    exposure, a soft shoulder (bright light rolls off instead of clipping), saturation, contrast and a tint per stage of the game
 //   LENS     a vignette, a slight colour fringe towards the corners (chromatic aberration) and a fine film grain
 //   DANGER   a red glow at the edges of the screen when the ship is nearly dead
-// The text of the UI is drawn after it (Direct2D, straight onto the back buffer) and stays sharp.
+// SUPERSAMPLING: the world can be drawn larger than the screen (DirectXSystem::SetRenderSize, the RESOLUTION of the settings in full screen: 4K on a 1440p screen). The graded picture
+// is then scaled down to the screen by two Lanczos passes in linear light (RESAMPLE: horizontal, then vertical, see DisplayMath.h and shaders/postfx.hlsli). The back buffer is the
+// size of the screen, so Windows never stretches it, and the text of the UI is drawn after it at the size of the screen (Direct2D, straight onto the back buffer): always sharp.
 // The shaders are compiled at build time (shaders/postfx*.hlsl -> postfx_*.cso). If anything fails, the post effects are off and the game is drawn as before;
 // the reason is written to postfx_error.txt next to the program. config.ini: post_fx=0 turns them off.
 namespace PostFx
@@ -29,6 +31,8 @@ struct Look
 bool Initialize(); // after DirectXSystem and Renderer2D
 void Finalize();
 bool IsActive();
+// The size of the picture of the world as it is drawn now (the render size, larger than the screen for a supersample); false when the post effects are off.
+bool GetSceneSize(int& width, int& height);
 
 void BeginScene(float r, float g, float b); // the world is drawn into the HDR target from here on
 void EndScene();                            // ... and put on the back buffer through the passes (call after Renderer2D_Flush)
@@ -38,6 +42,7 @@ void SetLook(const Look& look); // the look of this frame (the play scene sets i
 void Kick(float aberration);
 Look DefaultLook();
 }
+
 
 
 

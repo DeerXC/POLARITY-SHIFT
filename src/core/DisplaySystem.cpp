@@ -1,6 +1,7 @@
 #include "core/DisplaySystem.h"
 
 #include "core/DirectX.h"
+#include "core/DisplayMath.h"
 #include "core/TextRenderer.h"
 
 namespace
@@ -91,16 +92,7 @@ bool FullscreenFitSize(int& width, int& height)
     {
         return false;
     }
-    const int monitorWidth = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
-    const int monitorHeight = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
-    width = monitorWidth;
-    height = monitorWidth * 9 / 16;
-    if (height > monitorHeight)
-    {
-        height = monitorHeight;
-        width = monitorHeight * 16 / 9;
-    }
-    return width > 0 && height > 0;
+    return DisplayMath::FullscreenFit(monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left, monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top, width, height);
 }
 
 // First size that is at least as large as the screen picture ("native"). Smaller ones would only be a blurry enlargement.
@@ -111,14 +103,9 @@ int NativeResolutionIndex()
     {
         return 0;
     }
-    for (int i = 0; i < RESOLUTION_COUNT; ++i)
-    {
-        if (RESOLUTIONS[i].width >= width)
-        {
-            return i;
-        }
-    }
-    return RESOLUTION_COUNT - 1;
+    int widths[RESOLUTION_COUNT];
+    for (int i = 0; i < RESOLUTION_COUNT; ++i) widths[i] = RESOLUTIONS[i].width;
+    return DisplayMath::NativeIndex(widths, RESOLUTION_COUNT, width);
 }
 
 bool CenterWindow(int windowWidth, int windowHeight)
@@ -271,10 +258,13 @@ bool ApplyWindowed(const DisplayResolution& resolution)
         return false;
     }
     TextRenderer::ReleaseRenderTarget();
+    DirectXSystem::SetRenderSize(0, 0); // (a window: the picture is drawn at the size of the window)
     return DirectXSystem::Resize(resolution.width, resolution.height);
 }
 
-// render = the size the game is drawn at. A size larger than the screen is drawn at that size and scaled down (smoother edges, 4K on a 1440p screen).
+// render = the size the WORLD is drawn at. The back buffer is always the size of the screen (a back buffer of another size is stretched by Windows with a plain bilinear filter:
+// 4K on a 1440p screen came out SOFTER than 1440p). A render size larger than the screen is a supersample: the picture is drawn at that size and PostFx scales it down with a
+// Lanczos filter (DisplayMath.h); the text is drawn at the size of the screen, so it is sharp.
 bool ApplyFullscreen(const DisplayResolution& render)
 {
     if (g_WindowHandle == nullptr)
@@ -292,15 +282,10 @@ bool ApplyFullscreen(const DisplayResolution& render)
     {
         return false;
     }
-    // The window covers the whole screen. The game is 16:9: on a screen of another shape (16:10, 21:9) the back buffer takes the shape of the
-    // screen at the chosen render size, the game is drawn in its 16:9 middle and PostFx fills the rest (DirectXSystem::GetGameRect): no black bars.
-    int bufferW = render.width, bufferH = render.height;
-    if (monitorWidth * 9 < monitorHeight * 16) // taller than 16:9 (16:10, 4:3)
-        bufferH = render.width * monitorHeight / monitorWidth;
-    else if (monitorWidth * 9 > monitorHeight * 16) // wider (21:9)
-        bufferW = render.height * monitorWidth / monitorHeight;
-    g_FullscreenBufferW = bufferW;
-    g_FullscreenBufferH = bufferH;
+    // The window covers the whole screen and the back buffer is the whole screen. The game is 16:9: on a screen of another shape (16:10, 21:9) it is drawn in the 16:9 middle and
+    // PostFx fills the rest (DirectXSystem::GetGameRect): no black bars.
+    g_FullscreenBufferW = monitorWidth;
+    g_FullscreenBufferH = monitorHeight;
     g_LetterboxRect = monitorInfo.rcMonitor;
     g_LetterboxNeeded = false;
     g_FullscreenActive = true;
@@ -313,7 +298,9 @@ bool ApplyFullscreen(const DisplayResolution& render)
     HideLetterbox();
     RaiseFullscreen();
     TextRenderer::ReleaseRenderTarget();
-    return DirectXSystem::Resize(g_FullscreenBufferW, g_FullscreenBufferH);
+    const bool resized = DirectXSystem::Resize(g_FullscreenBufferW, g_FullscreenBufferH);
+    DirectXSystem::SetRenderSize(render.width, render.height);
+    return resized;
 }
 }
 
@@ -350,7 +337,18 @@ int DisplaySystem::FirstResolutionIndex(DisplayMode mode)
 
 int DisplaySystem::LastResolutionIndex(DisplayMode mode)
 {
-    return mode == DisplayMode::Fullscreen ? RESOLUTION_COUNT - 1 : FittingResolutionCount() - 1;
+    if (mode != DisplayMode::Fullscreen)
+    {
+        return FittingResolutionCount() - 1;
+    }
+    int width = 0, height = 0;
+    if (!FullscreenFitSize(width, height))
+    {
+        return RESOLUTION_COUNT - 1;
+    }
+    int widths[RESOLUTION_COUNT];
+    for (int i = 0; i < RESOLUTION_COUNT; ++i) widths[i] = RESOLUTIONS[i].width;
+    return DisplayMath::LastIndex(widths, RESOLUTION_COUNT, width); // (up to twice the picture on the screen: a supersample of more than 2 : 1 shows nothing more)
 }
 
 int DisplaySystem::NormalizeResolution(DisplayMode mode, int resolutionIndex)
@@ -404,11 +402,31 @@ bool DisplaySystem::Apply(DisplayMode displayMode, int resolutionIndex)
     return true;
 }
 
+bool DisplaySystem::IsSupersampled(DisplayMode mode, int resolutionIndex)
+{
+    int width = 0, height = 0;
+    if (mode != DisplayMode::Fullscreen || !FullscreenFitSize(width, height))
+    {
+        return false;
+    }
+    return RESOLUTIONS[ClampResolutionIndex(NormalizeResolution(mode, resolutionIndex))].width > width + 1;
+}
+
+void DisplaySystem::OnDisplayChange()
+{
+    if (!g_FullscreenActive || g_WindowHandle == nullptr)
+    {
+        return; // (a window does not depend on the screen)
+    }
+    Apply(g_DisplayMode, g_ResolutionIndex);
+}
+
 DisplayResolution DisplaySystem::GetResolution(int resolutionIndex)
 {
     resolutionIndex = ClampResolutionIndex(resolutionIndex);
 
     return RESOLUTIONS[resolutionIndex];
 }
+
 
 

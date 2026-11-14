@@ -1,6 +1,7 @@
 #include "core/PostFx.h"
 #include "core/DebugOptions.h"
 #include "core/DirectX.h"
+#include "core/DisplayMath.h"
 #include "core/GameSettings.h"
 
 #include <wrl/client.h>
@@ -36,6 +37,7 @@ struct Params
     float danger;
     float time;
     float rect[4];
+    float resample[4];
 };
 static_assert(sizeof(Params) % 16 == 0, "a constant buffer is a multiple of 16 bytes");
 
@@ -49,14 +51,22 @@ struct Target
 
 constexpr int BLOOM_LEVELS = 5;
 constexpr DXGI_FORMAT HDR_FORMAT = DXGI_FORMAT_R16G16B16A16_FLOAT;
+// the graded picture that is waiting to be scaled down: 8 bit, written as plain values (UNORM) and read as sRGB (the sampler turns them into linear light)
+constexpr DXGI_FORMAT GRADED_TEXTURE = DXGI_FORMAT_R8G8B8A8_TYPELESS;
+constexpr DXGI_FORMAT GRADED_WRITE = DXGI_FORMAT_R8G8B8A8_UNORM;
+constexpr DXGI_FORMAT GRADED_READ = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 bool g_Ready = false;    // everything was created: the passes run
 bool g_Failed = false;   // something failed once: never try again
 bool g_InScene = false;
 Target g_Scene;
 Target g_Bloom[BLOOM_LEVELS];
+Target g_Graded;                  // (only when the picture is scaled down) the picture after the grade, at the render size
+Target g_Temp;                    // (only then) the width done, the height not: game width x render height, float, linear light
+bool g_ResampleAvailable = false; // the two resample shaders were found: a render size larger than the screen can be used
+float g_Resample[4] = {1.0f, 1.0f, 0.0f, 0.0f}; // what the resample passes read (see postfx.hlsli, g_Resample)
 ComPtr<ID3D11VertexShader> g_VS;
-ComPtr<ID3D11PixelShader> g_PSPrefilter, g_PSDown, g_PSUp, g_PSComposite, g_PSFill;
+ComPtr<ID3D11PixelShader> g_PSPrefilter, g_PSDown, g_PSUp, g_PSComposite, g_PSFill, g_PSResampleH, g_PSResampleV;
 ComPtr<ID3D11Buffer> g_ParamBuffer;
 ComPtr<ID3D11SamplerState> g_Sampler;
 ComPtr<ID3D11BlendState> g_Additive;
@@ -112,7 +122,8 @@ bool MakePixelShader(const char* fileName, ComPtr<ID3D11PixelShader>& shader)
     return true;
 }
 
-bool MakeTarget(Target& t, int width, int height)
+// a render target that is also a texture. `texture` / `rtv` / `srv` are the formats of the resource and of its two views (UNKNOWN: the format of the resource).
+bool MakeTarget(Target& t, int width, int height, DXGI_FORMAT texture = HDR_FORMAT, DXGI_FORMAT rtv = DXGI_FORMAT_UNKNOWN, DXGI_FORMAT srv = DXGI_FORMAT_UNKNOWN)
 {
     t = Target{};
     D3D11_TEXTURE2D_DESC desc{};
@@ -120,14 +131,28 @@ bool MakeTarget(Target& t, int width, int height)
     desc.Height = static_cast<UINT>(height < 1 ? 1 : height);
     desc.MipLevels = 1;
     desc.ArraySize = 1;
-    desc.Format = HDR_FORMAT;
+    desc.Format = texture;
     desc.SampleDesc.Count = 1;
     desc.Usage = D3D11_USAGE_DEFAULT;
     desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     ID3D11Device* device = DirectXSystem::GetDevice();
     HRESULT hr = device->CreateTexture2D(&desc, nullptr, t.texture.GetAddressOf());
-    if (SUCCEEDED(hr)) hr = device->CreateRenderTargetView(t.texture.Get(), nullptr, t.rtv.GetAddressOf());
-    if (SUCCEEDED(hr)) hr = device->CreateShaderResourceView(t.texture.Get(), nullptr, t.srv.GetAddressOf());
+    if (SUCCEEDED(hr))
+    {
+        D3D11_RENDER_TARGET_VIEW_DESC rtvDesc{};
+        rtvDesc.Format = rtv != DXGI_FORMAT_UNKNOWN ? rtv : texture;
+        rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+        hr = device->CreateRenderTargetView(t.texture.Get(), &rtvDesc, t.rtv.GetAddressOf());
+    }
+    if (SUCCEEDED(hr))
+    {
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+        srvDesc.Format = srv != DXGI_FORMAT_UNKNOWN ? srv : texture;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MostDetailedMip = 0;
+        srvDesc.Texture2D.MipLevels = 1;
+        hr = device->CreateShaderResourceView(t.texture.Get(), &srvDesc, t.srv.GetAddressOf());
+    }
     if (FAILED(hr))
     {
         Fail("render target", hr);
@@ -138,19 +163,40 @@ bool MakeTarget(Target& t, int width, int height)
     return true;
 }
 
-// the targets follow the size of the 16:9 game rectangle of the back buffer
+// The targets follow the render size: the size of the 16:9 game rectangle of the back buffer, or larger when the picture is a supersample (DirectXSystem::SetRenderSize). A larger
+// picture also needs the two targets of the scale-down; without the resample shaders the render size is the game rectangle.
 bool EnsureTargets()
 {
-    int gx, gy, w, h;
-    DirectXSystem::GetGameRect(gx, gy, w, h);
-    if (g_Scene.texture != nullptr && g_Scene.width == w && g_Scene.height == h) return true;
-    if (!MakeTarget(g_Scene, w, h)) return false;
-    int bw = w, bh = h;
+    int gx, gy, gw, gh;
+    DirectXSystem::GetGameRect(gx, gy, gw, gh);
+    int rw = gw, rh = gh;
+    if (g_ResampleAvailable) DirectXSystem::GetRenderSize(rw, rh);
+    const bool resample = DisplayMath::NeedsResample(rw, rh, DisplayMath::Rect{gx, gy, gw, gh});
+    if (!resample)
+    {
+        rw = gw;
+        rh = gh;
+    }
+    const bool ready = g_Scene.texture != nullptr && g_Scene.width == rw && g_Scene.height == rh && (g_Graded.texture != nullptr) == resample
+                       && (!resample || (g_Temp.width == gw && g_Temp.height == rh));
+    if (ready) return true;
+    if (!MakeTarget(g_Scene, rw, rh)) return false;
+    int bw = rw, bh = rh;
     for (int i = 0; i < BLOOM_LEVELS; ++i)
     {
         bw = bw / 2 > 1 ? bw / 2 : 1;
         bh = bh / 2 > 1 ? bh / 2 : 1;
         if (!MakeTarget(g_Bloom[i], bw, bh)) return false;
+    }
+    if (resample)
+    {
+        if (!MakeTarget(g_Graded, rw, rh, GRADED_TEXTURE, GRADED_WRITE, GRADED_READ)) return false;
+        if (!MakeTarget(g_Temp, gw, rh)) return false;
+    }
+    else
+    {
+        g_Graded = Target{};
+        g_Temp = Target{};
     }
     return true;
 }
@@ -195,6 +241,7 @@ void UploadParams(ID3D11DeviceContext* context, const Target& source)
         p.rect[2] = static_cast<float>(gw) / fw;
         p.rect[3] = static_cast<float>(gh) / fh;
     }
+    std::memcpy(p.resample, g_Resample, sizeof(p.resample));
     D3D11_MAPPED_SUBRESOURCE mapped{};
     if (SUCCEEDED(context->Map(g_ParamBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped)))
     {
@@ -252,6 +299,15 @@ bool PostFx::Initialize()
         || !MakePixelShader("postfx_fill.cso", g_PSFill))
     {
         return false;
+    }
+
+    // the two shaders of the scale-down are optional: without them (an old build folder) the picture is drawn at the size of the screen, as before
+    {
+        const std::vector<char> h = LoadShaderFile("postfx_resample_h.cso");
+        const std::vector<char> v = LoadShaderFile("postfx_resample_v.cso");
+        g_ResampleAvailable = !h.empty() && !v.empty()
+                              && SUCCEEDED(device->CreatePixelShader(h.data(), h.size(), nullptr, g_PSResampleH.GetAddressOf()))
+                              && SUCCEEDED(device->CreatePixelShader(v.data(), v.size(), nullptr, g_PSResampleV.GetAddressOf()));
     }
 
     D3D11_BUFFER_DESC cb{};
@@ -315,6 +371,8 @@ void PostFx::Finalize()
 {
     g_Ready = false;
     g_Scene = Target{};
+    g_Graded = Target{};
+    g_Temp = Target{};
     for (Target& t : g_Bloom) t = Target{};
     g_VS.Reset();
     g_PSPrefilter.Reset();
@@ -322,6 +380,8 @@ void PostFx::Finalize()
     g_PSUp.Reset();
     g_PSComposite.Reset();
     g_PSFill.Reset();
+    g_PSResampleH.Reset();
+    g_PSResampleV.Reset();
     g_ParamBuffer.Reset();
     g_Sampler.Reset();
     g_Additive.Reset();
@@ -332,6 +392,13 @@ void PostFx::Finalize()
 bool PostFx::IsActive()
 {
     return g_Ready && !g_Failed;
+}
+
+bool PostFx::GetSceneSize(int& width, int& height)
+{
+    width = g_Scene.width;
+    height = g_Scene.height;
+    return IsActive() && g_Scene.texture != nullptr;
 }
 
 void PostFx::BeginScene(float r, float g, float b)
@@ -385,9 +452,31 @@ void PostFx::EndScene()
     DirectXSystem::GetGameRect(gx, gy, gw, gh);
     if (!DirectXSystem::IsGameRectFull()) // the bars round a 16:9 picture: filled first, the picture goes on top
     {
-        Pass(context, g_PSFill.Get(), g_Scene, nullptr, backBuffer, DirectXSystem::GetBackBufferWidth(), DirectXSystem::GetBackBufferHeight(), false);
+        // (the hairlines of the seam are measured in pixels of the screen, not of the picture: the picture can be a supersample)
+        Target onScreen = g_Scene;
+        onScreen.width = gw;
+        onScreen.height = gh;
+        Pass(context, g_PSFill.Get(), onScreen, nullptr, backBuffer, DirectXSystem::GetBackBufferWidth(), DirectXSystem::GetBackBufferHeight(), false);
     }
-    Pass(context, g_PSComposite.Get(), g_Scene, g_Bloom[0].srv.Get(), backBuffer, gw, gh, false, gx, gy);
+    if (g_Graded.texture == nullptr)
+    {
+        Pass(context, g_PSComposite.Get(), g_Scene, g_Bloom[0].srv.Get(), backBuffer, gw, gh, false, gx, gy);
+    }
+    else
+    {
+        // a supersample: the grade at the render size, then the width, then the height, in linear light, onto the screen
+        Pass(context, g_PSComposite.Get(), g_Scene, g_Bloom[0].srv.Get(), g_Graded.rtv.Get(), g_Scene.width, g_Scene.height, false);
+        g_Resample[0] = static_cast<float>(g_Scene.width) / static_cast<float>(gw);
+        g_Resample[1] = static_cast<float>(g_Scene.width);
+        g_Resample[2] = 0.0f;
+        g_Resample[3] = 0.0f;
+        Pass(context, g_PSResampleH.Get(), g_Graded, nullptr, g_Temp.rtv.Get(), gw, g_Scene.height, false);
+        g_Resample[0] = static_cast<float>(g_Scene.height) / static_cast<float>(gh);
+        g_Resample[1] = static_cast<float>(g_Scene.height);
+        g_Resample[2] = static_cast<float>(gx);
+        g_Resample[3] = static_cast<float>(gy);
+        Pass(context, g_PSResampleV.Get(), g_Temp, nullptr, backBuffer, gw, gh, false, gx, gy);
+    }
 
     // leave the device as the rest of the frame expects it: the back buffer bound, no texture of ours bound, default states
     ID3D11ShaderResourceView* none[2] = {nullptr, nullptr};
@@ -413,6 +502,7 @@ void PostFx::Kick(float aberration)
     aberration *= static_cast<float>(GameSettings::Get().flashPercent) / 100.0f; // (settings: FLASHES)
     if (aberration > g_Kick) g_Kick = aberration;
 }
+
 
 
 

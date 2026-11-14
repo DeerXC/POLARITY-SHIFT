@@ -4,6 +4,7 @@
 #include "core/DirectX.h"
 #include "core/GameInput.h"
 #include "core/GameTimer.h"
+#include "core/PostFx.h"
 #include "core/Loc.h"
 #include "core/TextRenderer.h"
 #include "game/GameBackground.h"
@@ -118,8 +119,18 @@ void DrawFpsOverlay()
     std::snprintf(line1, sizeof line1, "%d FPS", static_cast<int>(stats.fps + 0.5f));
     std::snprintf(line2, sizeof line2, "%.1f ms   worst %.1f   cpu %.1f   upd %.2f", stats.avgMs, stats.maxMs, stats.cpuMs,
                   stats.updatesPerFrame);
-    std::snprintf(line3, sizeof line3, "%dx%d%s   %s", DirectXSystem::GetBackBufferWidth(), DirectXSystem::GetBackBufferHeight(),
-                  DirectXSystem::IsFlipModel() ? " FLIP" : "", DirectXSystem::GetAdapterName());
+    int sceneW = 0, sceneH = 0, gameX = 0, gameY = 0, gameW = 0, gameH = 0;
+    DirectXSystem::GetGameRect(gameX, gameY, gameW, gameH);
+    if (PostFx::GetSceneSize(sceneW, sceneH) && (sceneW != gameW || sceneH != gameH))
+    {
+        // a supersample: the world is drawn at the first size and scaled down to the picture on the screen (the second)
+        std::snprintf(line3, sizeof line3, "%dx%d > %dx%d%s   %s", sceneW, sceneH, gameW, gameH, DirectXSystem::IsFlipModel() ? " FLIP" : "", DirectXSystem::GetAdapterName());
+    }
+    else
+    {
+        std::snprintf(line3, sizeof line3, "%dx%d%s   %s", DirectXSystem::GetBackBufferWidth(), DirectXSystem::GetBackBufferHeight(),
+                      DirectXSystem::IsFlipModel() ? " FLIP" : "", DirectXSystem::GetAdapterName());
+    }
 
     const float width = (std::max)(UiKit::TextWidth(line2, 11.0f), UiKit::TextWidth(line3, 11.0f)) + 28.0f;
     const float right = 1266.0f;
@@ -312,6 +323,7 @@ void Game_Draw()
     TextRenderer::SetGlobalAlpha(1.0f); // the overlay is never faded
     DrawFpsOverlay();
 }
+
 
 
 

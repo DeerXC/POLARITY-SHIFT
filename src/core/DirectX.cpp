@@ -3,6 +3,7 @@
 #include <dxgi.h>
 #include <dxgi1_6.h>
 #include "core/DebugOptions.h"
+#include "core/DisplayMath.h"
 #include "core/GameSettings.h"
 #include <wrl/client.h>
 
@@ -20,6 +21,8 @@ ComPtr<ID3D11RenderTargetView> g_RenderTargetView;
 
 int g_BackBufferWidth = 1280;
 int g_BackBufferHeight = 720;
+int g_RenderWidth = 0;  // the size of the picture of the world (0 = the game rectangle): see SetRenderSize
+int g_RenderHeight = 0;
 
 bool CreateRenderTarget(int width, int height)
 {
@@ -389,23 +392,23 @@ ID3D11RenderTargetView* GetBackBufferRTV()
 
 void GetGameRect(int& x, int& y, int& w, int& h)
 {
-    const int bw = g_BackBufferWidth > 0 ? g_BackBufferWidth : 1;
-    const int bh = g_BackBufferHeight > 0 ? g_BackBufferHeight : 1;
-    w = bw;
-    h = bw * 9 / 16;
-    if (h > bh)
-    {
-        h = bh;
-        w = bh * 16 / 9;
-    }
-    // (within 2 px of 16:9: use the whole buffer)
-    if (bw - w <= 2 && bh - h <= 2)
-    {
-        w = bw;
-        h = bh;
-    }
-    x = (bw - w) / 2;
-    y = (bh - h) / 2;
+    const DisplayMath::Rect r = DisplayMath::GameRect(g_BackBufferWidth, g_BackBufferHeight); // (the same arithmetic as the mouse and the text: DisplayMath.h)
+    x = r.x;
+    y = r.y;
+    w = r.w;
+    h = r.h;
+}
+
+void SetRenderSize(int width, int height)
+{
+    g_RenderWidth = width > 0 ? width : 0;
+    g_RenderHeight = height > 0 ? height : 0;
+}
+
+void GetRenderSize(int& width, int& height)
+{
+    const DisplayMath::Rect game = DisplayMath::GameRect(g_BackBufferWidth, g_BackBufferHeight);
+    DisplayMath::EffectiveRender(g_RenderWidth, g_RenderHeight, game, width, height);
 }
 
 bool IsGameRectFull()
@@ -450,5 +453,6 @@ bool IsFlipModel()
     return g_FlipModel;
 }
 }
+
 
 

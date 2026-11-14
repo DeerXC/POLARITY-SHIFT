@@ -1,4 +1,5 @@
 #include "core/GameInput.h"
+#include "core/DisplayMath.h"
 #include <Windows.h>
 #include <xinput.h>
 #include <cmath>
@@ -111,21 +112,9 @@ void UpdateMousePosition()
         g_IsMouseInsideWindow = false;
         return;
     }
-    // the game is the largest 16:9 rectangle in the middle of the window (DirectXSystem::GetGameRect): the mouse is measured in it
-    int gameW = clientWidth;
-    int gameH = clientWidth * 9 / 16;
-    if (gameH > clientHeight)
-    {
-        gameH = clientHeight;
-        gameW = clientHeight * 16 / 9;
-    }
-    if (clientWidth - gameW <= 2 && clientHeight - gameH <= 2)
-    {
-        gameW = clientWidth;
-        gameH = clientHeight;
-    }
-    const int gameX = (clientWidth - gameW) / 2;
-    const int gameY = (clientHeight - gameH) / 2;
+    // the game is the largest 16:9 rectangle in the middle of the window (the same function as the swap chain and the text: DisplayMath::GameRect): the mouse is measured in it
+    const DisplayMath::Rect game = DisplayMath::GameRect(clientWidth, clientHeight);
+    const int gameW = game.w, gameH = game.h, gameX = game.x, gameY = game.y;
     const int localX = mousePosition.x - gameX;
     const int localY = mousePosition.y - gameY;
     g_IsMouseInsideWindow = localX >= 0 && localX < gameW && localY >= 0 && localY < gameH;
@@ -657,3 +646,4 @@ std::string GameInput::PromptLabel(const std::string& keyboardLabel)
     if (keyboardLabel == "R") return "R3";
     return keyboardLabel;
 }
+

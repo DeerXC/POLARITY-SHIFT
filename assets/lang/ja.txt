@@ -66,6 +66,7 @@ DISPLAY	画面
 SOUND	サウンド
 DISPLAY MODE	表示モード
 RESOLUTION	解像度
+SUPERSAMPLED	スーパーサンプリング
 WINDOWED	ウィンドウ
 FULLSCREEN	フルスクリーン
 LANGUAGE	言語
@@ -489,3 +490,4 @@ ONLY {0}% OF THE BOSS IS LEFT	裁定者の残りはあと {0}%
 BEST {0}%	ベスト {0}%
 NEW BEST +{0}%	自己ベスト +{0}%
 NEW HIGH SCORE	ハイスコア更新
+

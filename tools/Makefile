@@ -26,7 +26,8 @@ LOGIC := boss/GameBoss.cpp boss/BossDraw.cpp boss/BossMask.cpp \
 LOGIC_OBJ := $(addprefix $(BUILD)/obj/,$(LOGIC:.cpp=.o)) $(BUILD)/obj/stubs.o
 
 SIM_TESTS := abandon_test boss_hit_test boss_p2_test boss_score_test module_fx_test pick_test step_b_test upgrade_test
-TESTS     := $(SIM_TESTS) save_test
+# display_test needs no game logic at all (src/core/DisplayMath.h is plain C++); save_test links the real GameSave
+TESTS     := $(SIM_TESTS) save_test display_test
 # Not in `make test`:
 #   boss_break_test  4 checks about the ram lane that leans fail (a ship out of the lane is still hit): they fail on the version before the refactor too. `make known-failing`.
 #   layout_check     measures the texts with the real font (DirectWrite): Windows only, it is built by the Visual Studio solution of the game.
@@ -58,6 +59,10 @@ $(BUILD)/sim: $(BUILD)/obj/test_sim_main.o $(LOGIC_OBJ)
 
 # ---- the save file: the real GameSave against files in a scratch folder
 $(BUILD)/save_test: $(BUILD)/obj/test_save_test.o $(BUILD)/obj/game/GameSave.o
+	$(CXX) $^ -o $@
+
+# ---- the arithmetic of the display (how a 16:9 game fits a screen of any shape, the scale-down of a supersample): a header and nothing else
+$(BUILD)/display_test: $(BUILD)/obj/test_display_test.o
 	$(CXX) $^ -o $@
 
 # every test runs in a scratch folder of its own (they write save files and logs)

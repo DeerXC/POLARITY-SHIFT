@@ -17,6 +17,11 @@ int GetBackBufferHeight();
 // x, y, w, h in back buffer pixels. On a 16:9 back buffer it is the whole buffer.
 void GetGameRect(int& x, int& y, int& w, int& h);
 bool IsGameRectFull();
+// The size that the WORLD is drawn at. 0 x 0 (the default, and the window mode) = the size of the game rectangle. A larger size is a supersample: the back buffer stays the size of
+// the screen (so Windows never scales it, and the text is drawn at the size of the screen), the picture is drawn bigger and PostFx scales it down with a Lanczos filter.
+// See DisplayMath.h.
+void SetRenderSize(int width, int height);
+void GetRenderSize(int& width, int& height); // never smaller than the game rectangle
 ID3D11RenderTargetView* GetBackBufferRTV(); // (PostFx draws its last pass onto it)
 ID3D11Device* GetDevice();
 ID3D11DeviceContext* GetContext();
@@ -28,4 +33,5 @@ ID3D11ShaderResourceView* GetSnapshotSRV();
 bool HasSnapshot();
 void SetSnapshotFrozen(bool frozen);
 }
+
 

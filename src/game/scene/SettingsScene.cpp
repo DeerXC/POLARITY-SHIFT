@@ -442,6 +442,7 @@ void DrawRowOf(int row)
         {
             const DisplayResolution r = DisplaySystem::GetResolution(g_PendingResolutionIndex);
             value = std::to_string(r.width) + " X " + std::to_string(r.height);
+            if (DisplaySystem::IsSupersampled(g_PendingDisplayMode, g_PendingResolutionIndex)) value += "  " + Loc::T("SUPERSAMPLED"); // (drawn larger than the screen and scaled down: smoother edges)
             break;
         }
         case SettingsMenuItem::VSync: value = Loc::T(GameSettings::Get().vsync ? "ON" : "OFF"); break;
@@ -729,6 +730,7 @@ void SettingsScene::CloseEmbedded()
     g_Embedded = false;
     g_EmbeddedClosed = false;
 }
+
 
 
 

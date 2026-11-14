@@ -20,6 +20,7 @@ cbuffer Params : register(b0)
     float g_Danger;
     float g_Time;
     float4 g_Rect;       // the 16:9 game rectangle in the back buffer, in 0..1 (x, y, w, h)
+    float4 g_Resample;   // resample passes: x = source pixels per destination pixel along the axis, y = size of the source along the axis, z / w = where the game rectangle starts in the back buffer (pixels)
 };
 
 struct VSOut
@@ -146,5 +147,68 @@ float4 PSComposite(VSOut i) : SV_TARGET
 
     float noise = Hash(i.uv * 1024.0 + g_Time) - 0.5;
     c += noise * g_Grain;
+    return float4(saturate(c), 1.0);
+}
+
+// ---- RESAMPLE: the supersampled picture scaled down to the screen. Two passes (horizontal, vertical) of a Lanczos filter with two lobes, in LINEAR light: g_Src of the first pass
+// is the graded picture as an sRGB texture (the sampler decodes it), the middle target is float, and the second pass writes the sRGB encoding to the back buffer.
+// A thin bright line (a hairline, a star) keeps its brightness: averaged in gamma space it would fade by a third at a ratio of 1.5. DisplayMath.h (ResampleAxis) is the twin of this
+// code and the test of it.
+float Lanczos2(float x)
+{
+    x = abs(x);
+    if (x < 1.0e-4) return 1.0;
+    if (x >= 2.0) return 0.0;
+    float px = 3.14159265 * x;
+    return 2.0 * sin(px) * sin(px * 0.5) / (px * px);
+}
+
+// one pixel of an axis: `axisPixel` is the index of the destination pixel along the axis (inside the game rectangle), `across` the pixel along the other axis
+// (not `line`: that is a reserved word of HLSL, the input of a geometry shader)
+float3 ResampleLine(Texture2D t, int axisPixel, int across, bool horizontal)
+{
+    float ratio = g_Resample.x;
+    float r = max(ratio, 1.0);
+    float support = 2.0 * r;
+    float centre = (axisPixel + 0.5) * ratio;
+    int first = (int)floor(centre - support + 0.5);
+    int last = (int)floor(centre + support - 0.5);
+    int maxIndex = (int)g_Resample.y - 1;
+    float3 sum = 0.0;
+    float weights = 0.0;
+    [loop] for (int k = first; k <= last; ++k)
+    {
+        float w = Lanczos2((k + 0.5 - centre) / r);
+        int index = clamp(k, 0, maxIndex);
+        int3 at = horizontal ? int3(index, across, 0) : int3(across, index, 0);
+        sum += t.Load(at).rgb * w;
+        weights += w;
+    }
+    return max(sum / max(weights, 1.0e-6), 0.0);
+}
+
+// pass 1: the width. g_Src is the graded picture (render size), the target is gameWidth x renderHeight (float, linear light)
+float4 PSResampleH(VSOut i) : SV_TARGET
+{
+    return float4(ResampleLine(g_Src, (int)i.pos.x, (int)i.pos.y, true), 1.0);
+}
+
+float3 LinearToSrgb(float3 l)
+{
+    l = saturate(l);
+    float3 low = l * 12.92;
+    float3 high = 1.055 * pow(l, 1.0 / 2.4) - 0.055;
+    return lerp(low, high, step(float3(0.0031308, 0.0031308, 0.0031308), l)); // (a component-wise select: the ?: of a vector is not portable between shader models)
+}
+
+// pass 2: the height. g_Src is the middle target, the target is the game rectangle of the back buffer; the position is in back buffer pixels, so the corner of the rectangle is
+// subtracted. The result is the sRGB encoding, with a triangular dither of one 8 bit step (the float picture would otherwise band in a dark sky).
+float4 PSResampleV(VSOut i) : SV_TARGET
+{
+    int x = (int)(i.pos.x - g_Resample.z);
+    int y = (int)(i.pos.y - g_Resample.w);
+    float3 c = LinearToSrgb(ResampleLine(g_Src, y, x, false));
+    float2 n = float2(Hash(i.pos.xy * 0.7071 + g_Time), Hash(i.pos.yx * 1.3 + g_Time * 1.7 + 17.0));
+    c += (n.x - n.y) * (1.0 / 255.0);
     return float4(saturate(c), 1.0);
 }

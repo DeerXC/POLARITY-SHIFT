@@ -236,6 +236,12 @@
     <FxCompile Include="shaders\postfx_fill.hlsl">
       <Filter>shaders</Filter>
     </FxCompile>
+    <FxCompile Include="shaders\postfx_resample_h.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\postfx_resample_v.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\postfx.hlsli">
@@ -268,6 +274,9 @@
       <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\DebugOptions.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\DisplayMath.h">
       <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\DirectX.h">
@@ -453,6 +462,7 @@
     </Image>
   </ItemGroup>
 </Project>
+
 
 
 
