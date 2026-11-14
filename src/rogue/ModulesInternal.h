@@ -104,11 +104,11 @@ struct Mote
 };
 constexpr int MOTE_MAX = 64;
 
-// the cards of a route screen (after wave 2: elite fleet / supply run, after wave 3: new module / forge / wager)
+// the cards of a route screen (after wave 2: elite fleet / calibration, after wave 3: new module / forge / wager)
 enum RouteKind
 {
     ROUTE_ELITE,
-    ROUTE_SUPPLY,
+    ROUTE_CALIBRATE,
     ROUTE_MODULE,
     ROUTE_FORGE,
     ROUTE_WAGER
@@ -134,7 +134,7 @@ extern int g_RerollShake;       // frames left of the shake of the button (press
 extern int g_Level[COUNT];       // 0 = not owned in this run, 1..2 = the level of the module
 extern bool g_ChoiceUpgrade[3];  // the card of the pick screen is an upgrade of a module that the ship owns
 extern bool g_ForgeNext;         // the next pick screen offers upgrades only
-extern bool g_WagerForge;        // the wager gives a module AND an upgrade: after the first pick the second one is a forge
+extern int g_ForgeQueue;         // the LAST this many of the picks that are left are forges (upgrades only): the wager is a module, then a forge
 extern int g_RouteStage;         // 1 = after wave 2, 2 = after wave 3
 extern int g_RouteKind[3];
 extern int g_RouteCount;
@@ -185,7 +185,9 @@ extern bool g_ChoiceDone;
 extern bool g_PrevStarting;
 extern bool g_PrevCleared;
 extern int g_PicksLeft;
-extern bool g_RareNext;
+extern int g_DirectorElitesDown;  // the extra elites of the elite fleet that were shot down in this wave (each one pays an upgrade)
+extern bool g_EliteBonus;         // the wave that was cleared last paid an elite upgrade (the reward screen says so)
+extern bool g_CalibrateOn;        // the route CALIBRATION was taken: the picks of waves 3 and 4 show a card that links to a module the ship owns
 extern int g_EchoCounter;
 extern int g_IdleAbsorbFrames;
 extern int g_SoundCooldown;
@@ -249,6 +251,36 @@ extern int g_HangarMessage;
 extern int g_HangarFlash;
 extern int g_HangarFlashId;
 
+// ---------------------------------------------------------------- what the modules did in this run (ModulesStats.cpp)
+// Every module has the three currencies of the game: DAMAGE (in shots), ENERGY (units of the bar) and HP, and a count of what it did (arcs fired, hits blocked ...).
+// Damage that a module does itself is booked on it; damage that a module only makes bigger (AFTERGLOW, FOCUS, BREACH ...) is booked as what would not have been dealt without it.
+struct ModuleStat
+{
+    float damage = 0.0f;
+    float energy = 0.0f;
+    float hp = 0.0f;
+    int count = 0;
+};
+constexpr int DAMAGE_OTHER = -2; // damage of something that is not a module (a tactic, the resonance of three break modules): in the total only
+extern ModuleStat g_Stat[COUNT];
+extern float g_StatTotalDamage; // all the damage the ship dealt (the gun, the beam, the modules)
+extern float g_StatTotalEnergy; // all the energy that went into the bar
+extern int g_DamageSource;      // who deals the damage that DamageEnemy / GameBoss::TakeDamage book right now: a module, DAMAGE_OTHER, or -1 (the gun and the beam)
+extern float g_LastFocusMul;    // what FOCUS made of the shot whose damage is booked next (OnShotHit sets it)
+extern float g_BeamBoost;       // OVERFLOW: how much of the beam that is on is the stored bullets (0 = nothing)
+void StatsReset();
+void CreditDamage(int module, float shots);
+void CreditEnergy(int module, float units);
+void CreditHp(int module, float points);
+void CreditCount(int module, int n = 1);
+// RAII: the damage dealt while it lives is booked on `module` (a module id, DAMAGE_OTHER)
+struct DamageSource
+{
+    int previous;
+    explicit DamageSource(int module) : previous(g_DamageSource) { g_DamageSource = module; }
+    ~DamageSource() { g_DamageSource = previous; }
+};
+
 // ---------------------------------------------------------------- internal functions
 bool Has(Id id);
 int Level(Id id);
@@ -268,13 +300,12 @@ int PulsePeriod();                       // PULSE: frames between two shockwaves
 void UpdateTactic();                     // the TACTIC key: decoy / dash / charge
 void FireChargeBeam(float charge);       // the beam of the tactic CHARGE (charge 0..1)
 bool ComboOn(int combo);
-bool SupplyAvailable();
 std::string ModuleCodes(char separator);
 void WriteLogRow(const char* event, const char* note);
 void EndRun(bool cleared, bool abandoned);
 void Grant(Id id);
 void ApplyPractice();
-void GainEnergy(int amount);
+void GainEnergy(int amount, int source = -1); // source: the module that put it there (the run report)
 float ScaleAbsorbEnergy(float base);
 void FireEchoArc(float ox, float oy, float hits = -1.0f, bool jumps = true); // hits < 0: the damage of ECHO; jumps: ECHO jumps to more enemies
 int AegisAbsorbsNeeded();
@@ -313,6 +344,7 @@ void OpenHangar();
 void UnlockSelected();
 void UpdateModeSelector(bool mouseInside, float mx, float my);
 }
+
 
 
 

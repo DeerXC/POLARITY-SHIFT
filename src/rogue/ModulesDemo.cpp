@@ -360,7 +360,7 @@ void ScenePulse(const D::Scene& s)
         D::Bullet(qx, qy, i % 2 ? D::RED : D::BLUE, false, 1.0f - 0.8f * taken, s.a * (1.0f - 0.6f * taken));
         if (taken > 0.05f) D::Dia(qx, qy, 2.0f, A(D::GREEN, s));
     }
-    D::Ship(cx, cy, D::BLUE, s.a);
+    D::Ship(cx, cy, t < 100.0f ? D::BLUE : D::RED, s.a); // (the switch of colour releases the shockwave)
 }
 
 // AEGIS: BLOCKS ONE WHITE BULLET OR BEAM; RECHARGES EVERY 40 ABSORBS. The shield takes the white bullet and breaks; absorbed bullets charge it again (the five pips stand for the 40).
@@ -583,3 +583,4 @@ void DrawModuleDemo(int hangarId, float x, float y, float w, float h, int frame)
     }
 }
 }
+

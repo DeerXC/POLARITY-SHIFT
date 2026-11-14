@@ -49,7 +49,9 @@ bool g_PrevCleared = false;
 
 int g_PicksLeft = 1;     // picks still to make on this pick screen sequence (2 after an elite wave)
 
-bool g_RareNext = false; // the next pick offers an upgrade card (when there is a module to upgrade)
+int g_DirectorElitesDown = 0; // the extra elites of the elite fleet that were shot down in this wave (each one pays an upgrade)
+bool g_EliteBonus = false;    // the wave that was cleared last paid an elite upgrade (the reward screen says so)
+bool g_CalibrateOn = false;   // the route CALIBRATION was taken: the picks of waves 3 and 4 show a card that links to a module the ship owns
 
 
 
@@ -74,7 +76,7 @@ int g_MomentumIdle = 0;
 int g_Level[COUNT]{};
 bool g_ChoiceUpgrade[3]{};
 bool g_ForgeNext = false;
-bool g_WagerForge = false;
+int g_ForgeQueue = 0; // the LAST this many of the picks that are left are forges (upgrades only)
 int g_RouteStage = 0;
 int g_RouteKind[3]{};
 int g_RouteCount = 0;
@@ -358,6 +360,7 @@ int PlayerShotDamage(float armorMul)
 // FOCUS: a hit on the same target as the hit before adds a stack; another target starts again. Returns what this hit does (1 = plain).
 float OnShotHit(int target)
 {
+    g_LastFocusMul = 1.0f;
     if (!Has(Id::Focus)) return 1.0f;
     if (target != g_FocusTarget)
     {
@@ -367,8 +370,9 @@ float OnShotHit(int target)
     }
     float mul = 1.0f + Balance::FOCUS_STEP * Gain(Id::Focus) * static_cast<float>(g_FocusStacks);
     if (g_FocusStacks >= Balance::FOCUS_MAX_STACKS && ComboOn(Meta::ComboLock)) mul *= 1.25f; // synergy: weakpoint lock
-    if (g_FocusStacks < Balance::FOCUS_MAX_STACKS) ++g_FocusStacks;
+    if (g_FocusStacks < Balance::FOCUS_MAX_STACKS && ++g_FocusStacks >= Balance::FOCUS_MAX_STACKS) CreditCount(static_cast<int>(Id::Focus)); // (full focus, counted once)
     g_FocusIdle = 0;
+    g_LastFocusMul = mul; // (the report books what it added: NoteDealt)
     return mul;
 }
 
@@ -395,6 +399,11 @@ int AegisAbsorbsNeeded()
     return (std::max)(1, static_cast<int>(absorbs));
 }
 
+float DeflectNetScale()
+{
+    return Has(Id::Deflect) ? Balance::DEFLECT_NET : 1.0f;
+}
+
 float DeflectChance()
 {
     return Has(Id::Deflect) ? Balance::DEFLECT_CHANCE : 0.0f;
@@ -417,12 +426,6 @@ static bool IsBodyHit(const char* source)
     return source != nullptr && (std::strcmp(source, "ram") == 0 || std::strncmp(source, "boss_body", 9) == 0);
 }
 
-// what AEGIS stops: a white bullet ("white_...") or a beam of the boss ("boss_beam_...")
-static bool IsWhiteOrBeam(const char* source)
-{
-    return source != nullptr && (std::strncmp(source, "white", 5) == 0 || std::strncmp(source, "boss_beam", 9) == 0);
-}
-
 int InvincibleFrames()
 {
     float frames = static_cast<float>(Balance::INVINCIBLE_FRAMES) * (1.0f + TalentAt(Talent::Buffer));
@@ -443,20 +446,26 @@ void OnPhaseStart(bool bossPhase)
     if (add > 0 && GameState::energy < add) GameState::energy = add; // (the talent CHARGE fills the bar up to that much, it never takes anything away)
 }
 
-// AEGIS: the shield takes a white bullet or a beam (0 damage) and has to recharge. Combat::HurtPlayer sees the 0 and plays the clang.
+// AEGIS: the shield takes one hit (0 damage) and has to recharge. Combat::HurtPlayer sees the 0 and plays the clang.
 int ScaleDamageTaken(int amount, const char* source)
 {
-    if (amount > 0 && Has(Id::Aegis) && g_AegisTimer <= 0 && IsWhiteOrBeam(source))
+    if (amount > 0 && Has(Id::Aegis) && g_AegisTimer <= 0)
     {
+        // the shield takes ONE hit of any kind: a bullet of the other colour, a white one, a beam, a body. (It took white bullets and beams only, and DEFLECT answers the white
+        // ones too: two modules for one kind of danger. Now DEFLECT turns the white bullets into energy, and the shield is for the hit that cannot be avoided.)
         g_AegisTimer = AegisAbsorbsNeeded();
         g_AegisFlash = 30;
+        CreditHp(static_cast<int>(Id::Aegis), static_cast<float>(amount));
+        CreditCount(static_cast<int>(Id::Aegis));
         GameAudio::Play(GameSound::AegisBlock);
         return 0;
     }
     // PULSE: a body that flies into the ship hits softer
     if (amount > 0 && Has(Id::Pulse) && IsBodyHit(source))
     {
+        const int before = amount;
         amount = static_cast<int>(std::lround(static_cast<float>(amount) * (1.0f - Balance::PULSE_BODY_CUT)));
+        CreditHp(static_cast<int>(Id::Pulse), static_cast<float>(before - amount));
     }
     // mercy: a ship that is nearly dead is hit a little less hard (a good player, who stays at full HP, never notices it)
     const float hpFraction = static_cast<float>(GameState::playerHp) / static_cast<float>(MaxHp() > 0 ? MaxHp() : 1);
@@ -566,11 +575,6 @@ int MaxHp()
         hp -= static_cast<int>(std::lround(static_cast<float>(Balance::PLAYER_MAX_HP) * percent / 100.0f));
     }
     return hp;
-}
-
-bool SupplyAvailable()
-{
-    return GameState::playerHp > 0 && GameState::playerHp < MaxHp();
 }
 
 // ---------------------------------------------------------------- run log (run_log.csv)
@@ -712,7 +716,10 @@ void Reset()
     g_PrevStarting = false;
     g_PrevCleared = false;
     g_PicksLeft = 1;
-    g_RareNext = false;
+    g_DirectorElitesDown = 0;
+    g_EliteBonus = false;
+    g_CalibrateOn = false;
+    StatsReset();
     g_PrevPolarity = GameState::player.polarity;
     g_EchoCounter = 0;
     g_IdleAbsorbFrames = 0;
@@ -756,7 +763,7 @@ void Reset()
     for (bool& flag : g_ChoiceUpgrade)
         flag = false;
     g_ForgeNext = false;
-    g_WagerForge = false;
+    g_ForgeQueue = 0;
     g_RouteStage = 0;
     g_RouteCount = 0;
     g_Branch2Done = false;
@@ -892,6 +899,7 @@ bool ConsumeGameOverLock()
     return false;
 }
 }
+
 
 
 

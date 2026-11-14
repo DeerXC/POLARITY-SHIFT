@@ -164,6 +164,44 @@ void ConvertBulletsToMotes()
 }
 
 // ---------------------------------------------------------------- wave events + pick screen
+// Does picking this module complete a synergy with a module that the ship owns? (Meta::ComboCompletedBy)
+static bool LinksToOwned(int module)
+{
+    return Meta::ComboCompletedBy(g_Owned, module) >= 0;
+}
+
+// The picks of a run are not independent draws: a build is made of modules that work together, and the player cannot build what is never offered. So the cards LEAD: when a card
+// that links to a module of the ship exists (it completes a synergy), it is on the screen with the chance Balance::LINK_CHANCE_PERCENT - always after the route CALIBRATION
+// in waves 3 and 4. The card says what it links to (DrawCard), so the pick before it was the setup and this one is the payoff. Never three of the same type on one screen.
+static void PlaceLinkCard(int pool[], int poolCount)
+{
+    if (g_ChoiceCount < 2) return;
+    const int wave = GameWave::GetCurrentWave();
+    const bool calibrated = g_CalibrateOn && (wave == ROUTE_WAVE || wave == ROUTE_WAVE + 1 || g_RouteStage == 2);
+    if (!calibrated && std::rand() % 100 >= Balance::LINK_CHANCE_PERCENT) return;
+    for (int i = 0; i < g_ChoiceCount; ++i)
+        if (LinksToOwned(pool[i])) return; // already there
+    int link = -1;
+    for (int i = g_ChoiceCount; i < poolCount && link < 0; ++i) // the pool is shuffled: the first one that links is a random one
+        if (LinksToOwned(pool[i])) link = i;
+    if (link < 0) return;
+    // it takes the card of a verb that is not alone on the screen if there is one, so that the three do not become the same type
+    int slot = std::rand() % g_ChoiceCount;
+    for (int attempt = 0; attempt < g_ChoiceCount; ++attempt)
+    {
+        const int candidate = (slot + attempt) % g_ChoiceCount;
+        int same = 0;
+        for (int k = 0; k < g_ChoiceCount; ++k)
+            if (INFO[pool[k]].verb == INFO[pool[candidate]].verb) ++same;
+        if (same > 1 || attempt == g_ChoiceCount - 1)
+        {
+            slot = candidate;
+            break;
+        }
+    }
+    std::swap(pool[slot], pool[link]);
+}
+
 void RollChoices()
 {
     int pool[COUNT];
@@ -221,17 +259,26 @@ void RollChoices()
             pool[i] = fresh[i];
         for (int i = 0; i < staleCount; ++i)
             pool[freshCount + i] = stale[i];
+        PlaceLinkCard(pool, poolCount);
         if (g_ChoiceCount < 3) break;
         const Verb a = INFO[pool[0]].verb, b = INFO[pool[1]].verb, c = INFO[pool[2]].verb;
         if (!(a == b && b == c)) break; // never offer three of the same verb
     }
     for (int i = 0; i < g_ChoiceCount; ++i)
         g_Choice[i] = pool[i];
-    // a module the ship already owns comes again as an UPGRADE: it takes the last card about every other pick, or a free card
-    // (after an elite wave there always is one: g_RareNext)
-    if (upgradeCount > 0 && (g_ChoiceCount < 3 || g_RareNext || std::rand() % 100 < 45))
+    // a module the ship already owns comes again as an UPGRADE: it takes a card about every other pick (the last card that is not the link), or a free card. (The elite fleet pays
+    // its upgrades as picks of their own now, see UpdateWaveEvents.)
+    if (upgradeCount > 0 && (g_ChoiceCount < 3 || std::rand() % 100 < 45))
     {
-        const int slot = g_ChoiceCount < 3 ? g_ChoiceCount++ : 2;
+        int slot = g_ChoiceCount < 3 ? g_ChoiceCount : 2;
+        if (g_ChoiceCount >= 3)
+            for (int k = 2; k >= 0; --k)
+                if (!LinksToOwned(g_Choice[k]))
+                {
+                    slot = k;
+                    break;
+                }
+        if (slot >= g_ChoiceCount) g_ChoiceCount = slot + 1;
         g_Choice[slot] = upgrades[std::rand() % upgradeCount];
         g_ChoiceUpgrade[slot] = true;
     }
@@ -262,8 +309,6 @@ bool RouteLocked(int kind)
 {
     switch (kind)
     {
-    case ROUTE_SUPPLY:
-        return !SupplyAvailable();
     case ROUTE_FORGE:
         return !AnyUpgradable();
     case ROUTE_WAGER:
@@ -272,16 +317,22 @@ bool RouteLocked(int kind)
         return false;
     }
 }
-// Route screens. After wave 2: ELITE FLEET / SUPPLY RUN (they change wave 3). After wave 3: what the reward is - a NEW MODULE (the pick that the
-// wave gives anyway), a FORGE (one upgrade instead of a module) or a WAGER (pay HP: a module AND an upgrade). No new currency: a route trades
-// what the ship already has (HP, a module slot, a risk).
+// Route screens. After wave 2, the way of waves 3 and 4:
+//   ELITE FLEET  an extra elite in each of the two waves; every one of them that is shot down pays a free UPGRADE pick (risk for power)
+//   CALIBRATION  no extra elites; the picks of waves 3 and 4 always show a card that links to a module the ship owns, and there is one more reroll (a safe way to build a synergy)
+// After wave 3, what the reward is. They all give ONE pick as a base, so that none of them is better than the others in every case:
+//   NEW MODULE   one pick of three new modules (a new effect, resonance with its type, a chance at a synergy)
+//   FORGE        two upgrades: the build that is there gets much stronger (and has no drawback any more)
+//   WAGER        pay 30 % of the maximum HP: a new module AND an upgrade
+// No new currency: a route trades what the ship already has (HP, a module slot, a risk). (Before, the elite fleet and the supply run both gave two picks, so NEW MODULE was a module
+// and a pick, a WAGER the same for HP and a FORGE two picks of upgrades: the three were not a choice, and the left card was always taken.)
 void OpenBranch(int stage)
 {
     g_RouteStage = stage;
     if (stage == 1)
     {
         g_RouteKind[0] = ROUTE_ELITE;
-        g_RouteKind[1] = ROUTE_SUPPLY;
+        g_RouteKind[1] = ROUTE_CALIBRATE;
         g_RouteCount = 2;
     }
     else
@@ -316,6 +367,7 @@ void UpdateWaveEvents()
         g_WaveStartFrame = g_RunFrames;
         g_PlayFrames = 0;
         g_ElitesSpawned = 0;
+        g_DirectorElitesDown = 0;
         OnPhaseStart(false);
         g_WaveSpawned = 0;
         g_WaveKilled = 0;
@@ -335,23 +387,15 @@ void UpdateWaveEvents()
         ++g_WavesCleared;
         ConvertBulletsToMotes();
         g_PicksLeft = 1;
-        g_RareNext = false;
-        if (wave == ROUTE_WAVE && g_Branch == 1) // elite fleet: two picks, one of them from the hangar
+        g_ForgeQueue = 0;
+        // the elite fleet pays an UPGRADE for the extra elite of waves 3 and 4 that was shot down: after wave 4 it is a pick of its own (a module, then a forge); after wave 3 it
+        // is added to the reward that the player chooses on the next screen (ConfirmBranch)
+        g_EliteBonus = g_Branch == 1 && (wave == ROUTE_WAVE || wave == ROUTE_WAVE + 1) && g_DirectorElitesDown > 0;
+        if (g_EliteBonus && wave != ROUTE2_WAVE)
         {
             g_PicksLeft = 2;
-            g_RareNext = true;
-        }
-        if (wave == ROUTE_WAVE && g_Branch == 2) // supply run: a module and an upgrade, and the ship is repaired
-        {
-            g_PicksLeft = 2;
-            g_WagerForge = true;
-            if (SupplyAvailable())
-            {
-                GameState::playerHp = (std::min)(MaxHp(), GameState::playerHp + Balance::HEAL_SUPPLY);
-                GameEffect::SpawnAbsorb(GameState::player.x, GameState::player.y, 0.12f, GameState::player.polarity);
-                GameAudio::Play(GameSound::Heal);
-                LogEvent("supply_heal", "");
-            }
+            g_ForgeQueue = 1;
+            LogEvent("elite_reward", "upgrade");
         }
         // every cleared wave repairs the ship by how much of it was shot down (the ships that flew away do not count as killed)
         g_LastClearPercent = g_WaveSpawned > 0 ? (std::min)(100, g_WaveKilled * 100 / g_WaveSpawned) : 100;
@@ -438,16 +482,14 @@ void ConfirmChoice(int slot)
         LogEvent("synergy", Meta::COMBOS[found[0]].code);
         GameAudio::Play(GameSound::SynergyFound);
     }
-    g_RareNext = false;
     g_ForgeNext = false;
     g_ChoiceOpen = false;
     g_ChoiceDone = true;
     GameAudio::Play(GameSound::MenuDecide);
-    if (--g_PicksLeft > 0) // a second pick follows (elite fleet, wager)
+    if (--g_PicksLeft > 0) // another pick follows (the forge, the wager, an elite upgrade)
     {
         g_ChoiceDone = false;
-        g_ForgeNext = g_WagerForge; // the wager: a module, then an upgrade
-        g_WagerForge = false;
+        g_ForgeNext = g_PicksLeft <= g_ForgeQueue; // the last picks of the queue are forges
         OpenChoice();
     }
 }
@@ -455,7 +497,7 @@ void ConfirmBranch(int slot)
 {
     if (slot < 0 || slot >= g_RouteCount) return;
     const int kind = g_RouteKind[slot];
-    if (RouteLocked(kind)) // nothing to repair / nothing to upgrade / not enough HP
+    if (RouteLocked(kind)) // nothing to upgrade / not enough HP
     {
         g_BranchMessage = 70;
         GameAudio::Play(GameSound::MenuError);
@@ -466,26 +508,39 @@ void ConfirmBranch(int slot)
     {
         g_Branch = (kind == ROUTE_ELITE) ? 1 : 2;
         g_BranchDone = true;
-        LogEvent("route", kind == ROUTE_ELITE ? "elite" : "supply");
+        if (kind == ROUTE_CALIBRATE)
+        {
+            g_CalibrateOn = true;
+            g_RerollsLeft += Balance::CALIBRATE_REROLLS;
+        }
+        LogEvent("route", kind == ROUTE_ELITE ? "elite" : "calibration");
     }
     else
     {
         g_Branch2Done = true;
         g_ChoiceDone = false;
+        // the picks of the reward: ONE as the base (a module), the forge makes it two upgrades, the wager a module and an upgrade; and the elite fleet adds an upgrade for the elite
+        // that was shot down
+        g_PicksLeft = 1;
+        g_ForgeQueue = 0;
         if (kind == ROUTE_FORGE)
         {
-            // the forge gives no new module, so it gives TWO upgrades: the second pick is a forge, too (with nothing left to upgrade it simply ends)
-            g_ForgeNext = true;
             g_PicksLeft = 2;
-            g_WagerForge = true;
-            g_RareNext = false;
+            g_ForgeQueue = 2; // two upgrades, no new module (with nothing left to upgrade the sequence simply ends)
         }
         else if (kind == ROUTE_WAGER)
         {
             GameState::playerHp -= WagerCost();
             g_PicksLeft = 2;
-            g_WagerForge = true;
+            g_ForgeQueue = 1;
         }
+        if (g_EliteBonus)
+        {
+            ++g_PicksLeft;
+            ++g_ForgeQueue;
+            LogEvent("elite_reward", "upgrade");
+        }
+        g_ForgeNext = g_PicksLeft <= g_ForgeQueue;
         LogEvent("route2", kind == ROUTE_MODULE ? "module" : (kind == ROUTE_FORGE ? "forge" : "wager"));
         OpenChoice();
     }
@@ -604,6 +659,7 @@ void UpdateChoice()
 }
 
 }
+
 
 
 

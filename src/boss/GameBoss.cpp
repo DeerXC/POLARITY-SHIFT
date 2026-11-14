@@ -1022,6 +1022,8 @@ bool HitBoss(int ship, float amount, Polarity bulletPolarity, bool special, floa
     const bool armored = false;
     const float dmg = amount * DamageMultiplier(ship, bulletPolarity, special) * Mod::BreachBonus();
     Mod::NoteDamage(dmg); // (the streak counts the damage on the boss too)
+    // the run report: what the shot did (a beam is `special`), and what the resistance of the body in phase 1 and 2 would have taken of it (BREACH goes through)
+    Mod::NoteDealt(dmg, (ship < 0 && g_Phase < 3 && g_Vent <= 0) ? Balance::BOSS_RESIST : 0.0f, true, special);
     PlayHitSound(armored);
     if (armored)
     {
@@ -3041,6 +3043,7 @@ bool GameBoss::GetTargetPosition(float& x, float& y)
     y = g_Y;
     return true;
 }
+
 
 
 

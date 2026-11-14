@@ -187,10 +187,12 @@ void DrawDefeatProgress(float reveal, float dx)
     // ... what it is, and what is left
     const float labelX = x0 + UiKit::TextWidth(big, 56.0f) + 20.0f;
     const float labelW = PROG_W - 104.0f - (labelX - x0);
+    // (it used to say "92% TO GO" here, and the same again as the bar and as "PHASE 2 IS 24% AWAY" below it: the number is 100 - the percentage, and the bar is the percentage.
+    // Now: what it is, and the ONE thing to do next)
     const std::string what = Loc::T(practice ? "BOSS DOWN" : "MISSION COMPLETE");
-    const std::string left = Loc::Fmt("{0}% TO GO", 100 - pct);
+    const std::string step = NextStepLine();
     Txt(what, labelX, 364.0f, UiKit::FitFontPx(what, 15.0f, labelW, 10.0f), Alpha(WHITE, a), TextAlignment::Left, labelW);
-    Txt(left, labelX, 390.0f, UiKit::FitFontPx(left, 17.0f, labelW, 10.0f), Alpha(GOLD, a), TextAlignment::Left, labelW);
+    Txt(step, labelX, 390.0f, UiKit::FitFontPx(step, 15.0f, labelW, 9.0f), Alpha(GOLD, a), TextAlignment::Left, labelW);
     // the score
     {
         const bool high = GameState::score > 0 && GameState::score >= GameSave::GetRecordData().highScore;
@@ -240,11 +242,8 @@ void DrawDefeatProgress(float reveal, float dx)
         UiKit::Fill(bestX - 1.0f, PROG_BAR_Y - 5.0f, 2.0f, PROG_BAR_H + 10.0f, Alpha(GOLD, 0.9f * a));
     }
 
-    // under the bar: the next step on the left, the best on the right
+    // under the bar: the best (a run that beats it says by how much)
     const float lineY = 452.0f;
-    const std::string step = NextStepLine();
-    const float stepW = PROG_W - 130.0f;
-    Txt(step, x0, lineY, UiKit::FitFontPx(step, 13.0f, stepW, 9.0f), Alpha(WHITE, 0.92f * a), TextAlignment::Left, stepW);
     if (newBest)
     {
         const std::string tag = Loc::Fmt("NEW BEST +{0}%", pct - best);
@@ -257,6 +256,100 @@ void DrawDefeatProgress(float reveal, float dx)
         Txt(tag, right, lineY, 13.0f, Alpha(GOLD, 0.9f * a), TextAlignment::Right, 130.0f);
     }
 }
+}
+
+// ---------------------------------------------------------------- what the modules did (game over and clear pages)
+// One row per module, in the order they were picked: the icon, the name (and II for an upgrade), and what it did in the three currencies of the game - DAMAGE (shots), ENERGY (units
+// of the bar), HP - and what it counted (arcs, blocks ...). A thin bar under the numbers is the share of the run's damage (or, for a module that works in energy, of its energy):
+// the eye finds the module that carried the run before it reads a number. A module that did nothing says so (a card that does nothing is something the player should see).
+// The books are Mod::NoteDealt and the Credit* functions (ModulesStats.cpp).
+void DrawModuleReport(float x, float y, float w, float h, float reveal)
+{
+    reveal = reveal < 0.0f ? 0.0f : (reveal > 1.0f ? 1.0f : reveal);
+    if (reveal <= 0.01f) return;
+    const float a = reveal;
+    const std::string title = Loc::T("WHAT YOUR MODULES DID");
+    Txt(title, x, y + 8.0f, UiKit::FitFontPx(title, 13.0f, w * 0.60f, 9.0f), Alpha(DIM, 0.95f * a), TextAlignment::Left, w * 0.62f);
+    const int n = ModuleReportCount();
+    if (n <= 0)
+    {
+        Txt(Loc::T("NO MODULES"), x, y + 40.0f, 13.0f, Alpha(DIM, 0.90f * a), TextAlignment::Left, w);
+        return;
+    }
+    // the totals, on the right of the title: the numbers that the bars are shares of
+    {
+        const std::string totals = Loc::FmtText("DAMAGE {0}   ENERGY {1}", std::to_string(static_cast<int>(ReportTotalDamage())), std::to_string(static_cast<int>(ReportTotalEnergy())));
+        Txt(totals, x + w, y + 8.0f, UiKit::FitFontPx(totals, 11.0f, w * 0.40f, 8.0f), Alpha(DIM, 0.75f * a), TextAlignment::Right, w * 0.42f);
+    }
+    UiKit::Fill(x, y + 22.0f, w, 1.0f, Alpha(UiKit::Rgba(1.0f, 1.0f, 1.0f, 0.20f), a));
+    int synergies = 0;
+    for (int c = 0; c < Meta::COMBO_COUNT; ++c) synergies += ComboOn(c) ? 1 : 0;
+    const float footerH = synergies > 0 ? 26.0f : 0.0f;
+    const float rowH = (std::max)(20.0f, (std::min)(34.0f, (h - 30.0f - footerH) / static_cast<float>(n)));
+    const float totalDamage = (std::max)(1.0f, ReportTotalDamage());
+    const float totalEnergy = (std::max)(1.0f, ReportTotalEnergy());
+    float rowY = y + 30.0f;
+    for (int i = 0; i < n; ++i)
+    {
+        const ModuleReportRow row = ModuleReportAt(i);
+        const Info& info = INFO[row.module];
+        const UiKit::Color tint = VerbColor(info.verb);
+        const bool idle = row.damage < 0.5f && row.energy < 0.5f && row.hp < 0.5f && row.count <= 0;
+        const float ra = a * (idle ? 0.60f : 1.0f);
+        const float cy = rowY + rowH * 0.5f - 4.0f;
+        DrawIcon(row.module, x, cy - 11.0f, 22.0f, Alpha(tint, ra));
+        const std::string name = Loc::T(info.name);
+        const float nameW = 112.0f;
+        Txt(name, x + 32.0f, cy, UiKit::FitFontPx(name, 14.0f, nameW, 9.0f), Alpha(WHITE, ra), TextAlignment::Left, nameW + 4.0f);
+        if (row.level >= 2) Txt("II", x + 32.0f + nameW + 2.0f, cy, 11.0f, Alpha(GOLD, ra), TextAlignment::Left, 24.0f);
+        // what it did: a few short items, left to right
+        float ix = x + 178.0f;
+        const float itemRight = x + w;
+        auto item = [&](const std::string& text, UiKit::Color color)
+        {
+            const float tw = (std::min)(UiKit::TextWidth(text, 12.0f), itemRight - ix);
+            if (tw <= 6.0f) return;
+            Txt(text, ix, cy, 12.0f, Alpha(color, ra), TextAlignment::Left, tw + 6.0f);
+            ix += tw + 14.0f;
+        };
+        if (idle)
+        {
+            item(Loc::T("NO EFFECT THIS RUN"), DIM);
+        }
+        else
+        {
+            if (row.damage >= 0.5f) item(Loc::FmtText("{0} DAMAGE", std::to_string(static_cast<int>(row.damage + 0.5f))), UiKit::Rgba(1.00f, 0.66f, 0.42f, 1.0f));
+            if (row.energy >= 0.5f) item(Loc::FmtText("{0} ENERGY", std::to_string(static_cast<int>(row.energy + 0.5f))), UiKit::Rgba(0.55f, 0.86f, 1.00f, 1.0f));
+            if (row.hp >= 0.5f) item(Loc::FmtText("{0} HP", std::to_string(static_cast<int>(row.hp + 0.5f))), UiKit::Rgba(0.55f, 1.00f, 0.72f, 1.0f));
+            const char* countLabel = ModuleReportCountLabel(row.module);
+            if (row.count > 0 && countLabel[0] != 0) item(std::to_string(row.count) + " " + Loc::T(countLabel), DIM);
+        }
+        // the share bar
+        if (!idle)
+        {
+            const float share = row.damage >= 0.5f ? row.damage / totalDamage : (row.energy >= 0.5f ? row.energy / totalEnergy : 0.0f);
+            if (share > 0.0f)
+            {
+                const float barY = rowY + rowH - 5.0f;
+                const float barW = w - 32.0f;
+                UiKit::Fill(x + 32.0f, barY, barW, 2.0f, Alpha(UiKit::Rgba(1.0f, 1.0f, 1.0f, 0.10f), a));
+                UiKit::Fill(x + 32.0f, barY, (std::max)(2.0f, barW * (std::min)(1.0f, share)), 2.0f, Alpha(tint, 0.90f * a));
+            }
+        }
+        rowY += rowH;
+    }
+    if (synergies > 0)
+    {
+        std::string line;
+        for (int c = 0; c < Meta::COMBO_COUNT; ++c)
+        {
+            if (!ComboOn(c)) continue;
+            if (!line.empty()) line += "  /  ";
+            line += Loc::T(Meta::COMBOS[c].name);
+        }
+        const std::string text = Loc::FmtText("SYNERGY: {0}", line);
+        Txt(text, x, rowY + 10.0f, UiKit::FitFontPx(text, 12.0f, w, 8.0f), Alpha(GOLD, 0.95f * a), TextAlignment::Left, w + 8.0f);
+    }
 }
 
 // ---------------------------------------------------------------- game over summary
@@ -285,22 +378,8 @@ void DrawGameOverSummary(float reveal)
     std::snprintf(timeText, sizeof timeText, "%d:%02d", g_DeathSeconds / 60, g_DeathSeconds % 60);
     Txt(Loc::T("TIME"), x + dx, 304.0f, 13.0f, Alpha(UiKit::Rgba(0.66f, 0.74f, 0.88f, 0.95f), reveal), TextAlignment::Left, 200.0f);
     Txt(timeText, x + 90.0f + dx, 304.0f, 20.0f, Alpha(WHITE, reveal), TextAlignment::Left, 200.0f);
-    // modules used
-    if (g_OrderCount == 0)
-    {
-        Txt(Loc::T("NO MODULES"), x + 230.0f + dx, 304.0f, 13.0f, Alpha(UiKit::Rgba(0.56f, 0.64f, 0.78f, 0.90f), reveal), TextAlignment::Left, 300.0f);
-    }
-    else
-    {
-        const float size = 24.0f;
-        const float gap = 10.0f;
-        float ix = x + 230.0f + dx;
-        for (int i = 0; i < g_OrderCount; ++i)
-        {
-            DrawIcon(g_Order[i], ix, 292.0f, size, Alpha(VerbColor(INFO[g_Order[i]].verb), reveal));
-            ix += size + gap;
-        }
-    }
+    // what the modules did (the icons of the modules were a row here; the report says what each one was worth)
+    DrawModuleReport(540.0f - (1.0f - reveal) * 80.0f, 294.0f, 450.0f, 300.0f, reveal);
     DrawDefeatProgress(reveal, dx);
     DrawRunResult();
 }
@@ -856,6 +935,7 @@ bool DrawTitleOverlay()
     return true;
 }
 }
+
 
 
 

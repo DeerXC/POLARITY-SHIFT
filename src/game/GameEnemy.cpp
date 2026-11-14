@@ -519,6 +519,7 @@ bool SpawnEnemyBullet(EnemyBullet enemyBullets[], int enemyBulletCount, float x,
         bullet.burst = 0;
         bullet.energyMul = isHoming ? Balance::ABSORB_MUL_HOMING : 1.0f;
         bullet.grazed = false;
+        bullet.deflected = false;
         bullet.fuse = 0;
         bullet.size = 1.0f;
         g_LastBulletIndex = i;
@@ -2357,6 +2358,7 @@ bool GameEnemy::HasActiveEnemy(const Enemy enemies[], int enemyCount)
 
     return false;
 }
+
 
 
 

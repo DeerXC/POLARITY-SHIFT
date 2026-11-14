@@ -158,6 +158,7 @@
     <ClCompile Include="src\rogue\ModulesHangar.cpp" />
     <ClCompile Include="src\rogue\ModulesSynergyDemo.cpp" />
     <ClCompile Include="src\rogue\ModulesPick.cpp" />
+    <ClCompile Include="src\rogue\ModulesStats.cpp" />
     <ClCompile Include="src\ui\GameHud.cpp" />
     <ClCompile Include="src\ui\GameMenuUi.cpp" />
     <ClCompile Include="src\ui\CutIn.cpp" />
@@ -370,5 +371,6 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+
 
 

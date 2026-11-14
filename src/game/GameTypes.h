@@ -171,6 +171,7 @@ struct EnemyBullet
     int owner;    // EnemyType of the enemy that fired it (the run log says what hurt the ship)
     float energyMul; // what absorbing it gives, as a multiple of a plain bullet: 3 for a mine, 2 for a bullet that follows the ship, 1 for the rest (Balance::ABSORB_MUL_*)
     bool grazed;  // DEFLECT: the chance to absorb it has been rolled already (a white bullet that grazes the ship rolls once)
+    bool deflected; // DEFLECT: the roll was won: the white bullet is absorbed like one of the colour of the ship, as soon as it reaches the ship
     int fuse;     // a mine of the heavy: steps until it bursts into a ring (0 = an ordinary bullet)
     int burst;    // ... how many bullets it bursts into (0 = MINE_RING)
     float size;   // 1 = an ordinary bullet; a mine is drawn and hit 1.9 times as big
@@ -178,3 +179,4 @@ struct EnemyBullet
     float prevX; // position at the start of the last update step (render interpolation)
     float prevY;
 };
+

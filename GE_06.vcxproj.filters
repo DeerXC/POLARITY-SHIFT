@@ -195,6 +195,9 @@
     <ClCompile Include="src\rogue\ModulesPick.cpp">
       <Filter>src\rogue</Filter>
     </ClCompile>
+    <ClCompile Include="src\rogue\ModulesStats.cpp">
+      <Filter>src\rogue</Filter>
+    </ClCompile>
     <ClCompile Include="src\ui\CutIn.cpp">
       <Filter>src\ui</Filter>
     </ClCompile>
@@ -462,6 +465,7 @@
     </Image>
   </ItemGroup>
 </Project>
+
 
 
 

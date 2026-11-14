@@ -206,6 +206,8 @@ void GameClearScene::Draw()
         UiKit::Text(Loc::T("NEW BEST"), 346.0f + 85.0f, 357.0f, 13.0f, GameMenuUi::Ink(a), TextAlignment::Center, 170.0f, false);
     }
 
+    // what the modules did (the same panel as the game over page)
+    Mod::DrawModuleReport(430.0f, 384.0f, 470.0f, 292.0f, Reveal(34, 16.0f));
     GameMenuUi::DrawResultMenuItem(Loc::T("NEW RUN"), GAME_CLEAR_MENU_Y[0], g_SelectedGameClearMenuItem == 0, false);
     GameMenuUi::DrawResultMenuItem(Loc::T("TITLE"), GAME_CLEAR_MENU_Y[1], g_SelectedGameClearMenuItem == 1, false);
 
@@ -218,6 +220,7 @@ void GameClearScene::ResetSelection()
     g_SelectedGameClearMenuItem = -1;
     GameMenuUi::SetBackdropPolarity(false);
 }
+
 
 
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game/GameTypes.h"
+#include "rogue/ModuleDefs.h"
 
 // Roguelite layer of the game: 15 modules the player picks after each wave, hangar unlocks, challenge levels,
 // wave routes and the run log. PlayScene and Combat call these hooks; everything behind them is private to rogue/.
@@ -17,7 +18,7 @@ void DrawChoice();
 void DrawChips();
 void DrawWorld();
 void AfterPlayerUpdate();
-void OnAbsorb(float baseEnergy); // one absorbed bullet: energy through the chain (Balance::ChainScale) and the modules
+void OnAbsorb(float baseEnergy, int source = -1); // one absorbed bullet: energy through the chain (Balance::ChainScale) and the modules. source: the module that made it possible (SIPHON, DEFLECT: the run report)
 void NoteHit();                 // the ship was hurt: the streak drops a tier
 void NoteDamage(float shots);   // the ship dealt this much damage (in shots): the streak grows
 void OnEnemyKilled(const Enemy& enemy); // a kill: energy motes (more with the streak), the clear rate of the wave
@@ -35,6 +36,9 @@ float ChainRate();              // 0..1: how much of its energy an absorbed bull
 float DamageMul();              // what a shot of the ship does (1 = plain; AFTERGLOW raises it)
 int PlayerShotDamage(float armorMul); // HP points of an enemy that one shot takes away (Balance::HP_UNIT per base shot)
 float OnShotHit(int target);    // FOCUS: a shot hits a target (an enemy slot, 1000 + a part of the boss): what it does (1 = plain)
+// The ship dealt `shots` of damage (the gun, the beam, or a module: see DamageSource). reduction: the share that a shield / the resistance of the boss would have taken (BREACH
+// gets it booked), bonusTarget: an elite, the rival or the boss (BREACH level 2), beam: the piercing beam (TWIN, OVERFLOW). Called by Combat and GameBoss.
+void NoteDealt(float shots, float reduction, bool bonusTarget, bool beam);
 bool FocusLocked();
 bool BackwaterActive();         // BACKWATER is on (under half of the HP): the screen edges glow (PostFx danger)             // synergy WEAKPOINT LOCK: the armour and the resistance of the target are ignored
 float SpecialDamageMul();       // what a tick of the beam that is on does (TWIN, OVERFLOW; 1 = plain)
@@ -45,6 +49,7 @@ int ScaleDamageTaken(int amount, const char* source = ""); // source: "ram" / "b
 int InvincibleFrames();                                    // the invincibility after a hit (the talent BUFFER and BACKWATER make it longer)
 float ShotDurationScale();                                 // the talent LONG PIERCE: how much longer the piercing beam lasts (1 = plain)
 void OnPhaseStart(bool bossPhase);                         // a wave or a phase of the boss begins: the talent CHARGE fills the bar a little
+float DeflectNetScale();                                   // DEFLECT: how much larger than the ship the box is in which a white bullet counts as grazing it (1 without the module)
 float DeflectChance();                                     // the chance that a white bullet that grazes the ship is absorbed (0 without DEFLECT)
 float DeflectEnergyMul();                                  // ... and what such a bullet gives (times a plain bullet; more at level 2)
 bool TryDeflect();                                         // DEFLECT: a white bullet grazes the ship: is it absorbed? (a roll; false without the module)
@@ -76,6 +81,24 @@ bool IsMouseOnModeSelector();
 
 // Game over screen: a short lock after dying so that a mashed key does not skip the result.
 bool ConsumeGameOverLock();
+
+// ---- the report of a run: what every module did (the game over and the clear page)
+struct ModuleReportRow
+{
+    int module;   // Id
+    int level;    // 1 or 2
+    float damage; // shots of damage dealt (or made possible)
+    float energy; // units of energy
+    float hp;     // points of HP (healed, or not lost)
+    int count;    // what it did, counted (COUNT_LABEL in ModulesStats.cpp says what)
+};
+int ModuleReportCount();                  // the modules of the run, in the order they were picked
+ModuleReportRow ModuleReportAt(int index);
+const char* ModuleReportCountLabel(int module); // Loc key of what the count of a module counts ("ARCS", "BLOCKED" ...)
+float ReportTotalDamage();
+float ReportTotalEnergy();
+void DrawModuleReport(float x, float y, float w, float h, float reveal); // the panel itself (rogue/ModulesDrawMenus.cpp)
 }
+
 
 

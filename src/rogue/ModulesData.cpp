@@ -10,16 +10,16 @@ const Info INFO[COUNT] = {
     {"SIPHON", "ABSORB RANGE +90%", nullptr, nullptr, "siphon", Verb::Absorb, 0},
     {"ECHO", "EVERY 4 ABSORBS: AN ARC", "THE ARC JUMPS TO 2 MORE ENEMIES", nullptr, "echo", Verb::Absorb, 0},
     {"OVERFLOW", "FULL BAR: ABSORBED BULLETS ARE STORED", "EACH: NEXT BEAM +4% DAMAGE AND LENGTH", nullptr, "overflow", Verb::Absorb, 0},
-    {"MOMENTUM", "EACH ABSORB: FIRE RATE +8%, MAX +64%", "STACKS FADE AFTER 4 SECONDS", "ABSORB ENERGY -15%", "momentum", Verb::Absorb, 0},
-    {"DEFLECT", "WHITE BULLETS THAT GRAZE: 85% ABSORBED", "AND THEY GIVE TRIPLE ENERGY", nullptr, "deflect", Verb::Absorb, 0},
+    {"MOMENTUM", "EACH ABSORB: FIRE RATE +5%, MAX +40%", "STACKS FADE AFTER 4 SECONDS", nullptr, "momentum", Verb::Absorb, 0},
+    {"DEFLECT", "WHITE BULLETS THAT COME CLOSE: 85% ABSORBED", "AND THEY GIVE TRIPLE ENERGY", nullptr, "deflect", Verb::Absorb, 0},
     {"EMBER", "FIRE BAND AFTER SPECIAL", "THE FIRE BURNS BULLETS INTO ENERGY", nullptr, "ember", Verb::Break, 0},
     {"BREACH", "IGNORES ALL DAMAGE REDUCTION", "ELITE SHIELDS, BOSS RESISTANCE", nullptr, "breach", Verb::Break, 0},
-    {"TWIN", "HALF BAR: A HALF BEAM", "IT COSTS HALF A BAR, 75% DAMAGE", nullptr, "twin", Verb::Break, 0},
+    {"TWIN", "HALF BAR: A HALF BEAM", "IT COSTS HALF A BAR, 90% DAMAGE", nullptr, "twin", Verb::Break, 0},
     {"AFTERGLOW", "AFTER THE BEAM: FIRE RATE +40%", "AND SHOT DAMAGE +40% FOR 4 S", nullptr, "afterglow", Verb::Break, 0},
     {"FOCUS", "HITS ON ONE TARGET: +4% EACH", "UP TO +40%, RESET ON A NEW TARGET", nullptr, "focus", Verb::Break, 0},
     {"BACKUP CORE", "REVIVE ONCE WITH HALF THE HP", "AND A BLAST OVER THE WHOLE SCREEN", nullptr, "backup_core", Verb::Survive, 0},
-    {"PULSE", "EVERY 6 S A SHOCKWAVE: BULLETS TO ENERGY", "BODY HITS -25%, A HIT BRINGS IT SOONER", nullptr, "pulse", Verb::Survive, 0},
-    {"AEGIS", "BLOCKS ONE WHITE BULLET OR BEAM", "RECHARGES EVERY 40 ABSORBS", "MAX HP -10%", "aegis", Verb::Survive, 0},
+    {"PULSE", "SWITCH COLOUR: A SHOCKWAVE, READY EVERY 6 S", "BULLETS TO ENERGY, BODY HITS -25%", nullptr, "pulse", Verb::Survive, 0},
+    {"AEGIS", "BLOCKS ONE HIT OF ANY KIND", "RECHARGES EVERY 40 ABSORBS", "MAX HP -10%", "aegis", Verb::Survive, 0},
     {"MEND", "5 S WITHOUT A HIT: 1 HP EVERY 1.5 S", nullptr, nullptr, "mend", Verb::Survive, 0},
     {"BACKWATER", "UNDER HALF HP: ABSORB ENERGY +20%", "BEAM NEEDS 15 LESS, LONGER INVINCIBILITY", nullptr, "backwater", Verb::Survive, 0}};
 
@@ -146,7 +146,7 @@ float HeadlineValue(Id id, int level)
     case Id::Breach:
         return level >= 2 ? 100.0f * (1.0f + Balance::BREACH_LEVEL2_BONUS) : 100.0f;
     case Id::Twin:
-        return (std::min)(100.0f, Balance::TWIN_DAMAGE * 100.0f * g);
+        return Balance::TWIN_DAMAGE * 100.0f * g;
     case Id::Afterglow:
         return static_cast<float>(Balance::AFTERGLOW_FRAMES) / 60.0f * g;
     case Id::Focus:
@@ -166,4 +166,5 @@ float HeadlineValue(Id id, int level)
     }
 }
 }
+
 

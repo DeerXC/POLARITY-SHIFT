@@ -645,6 +645,15 @@ void DrawChips()
         {
             Txt(g_Level[index] == 2 ? "II" : "III", x + SIZE + 2.0f, y - 5.0f, 11.0f, Alpha(GOLD, alpha), TextAlignment::Right, 30.0f);
         }
+        if (index == static_cast<int>(Id::Pulse)) // PULSE: the bar fills while the shockwave charges; full and blinking = it is ready, SWITCH COLOUR
+        {
+            const int period = (std::max)(1, PulsePeriod());
+            const float charge = g_PulseCooldown <= 0 ? 1.0f : 1.0f - static_cast<float>(g_PulseCooldown) / static_cast<float>(period);
+            const bool ready = g_PulseCooldown <= 0;
+            const float blink = ready ? 0.55f + 0.45f * std::sin(static_cast<float>(g_RunFrames) * 0.30f) : 1.0f;
+            UiKit::Fill(x, y - 6.0f, SIZE, 2.0f, UiKit::Rgba(1.0f, 1.0f, 1.0f, 0.12f));
+            UiKit::Fill(x, y - 6.0f, SIZE * (charge < 0.0f ? 0.0f : charge), 2.0f, Alpha(GOLD, alpha * blink));
+        }
         if (index == static_cast<int>(Id::Momentum) && g_Momentum > 0.0f) // the stacks of MOMENTUM: a gold bar above the icon
         {
             UiKit::Fill(x, y - 6.0f, SIZE, 2.0f, UiKit::Rgba(1.0f, 1.0f, 1.0f, 0.12f));
@@ -827,22 +836,24 @@ void DrawCard(int slot, int count)
     const float verbRight = x + w - 20.0f;
     Txt(verb, verbRight, y + 28.0f, verbPx, Alpha(ink.sub, alpha), TextAlignment::Right, verbW + 30.0f);
     UiKit::Fill(verbRight - verbW, y + 38.0f, verbW, 2.0f, Alpha(tint, alpha));
-    // resonance / synergy hints
+    // what the card is to the build: an upgrade, a LINK (it completes a synergy with a module that the ship owns: the name of the synergy if it was found, the name of the partner
+    // if it was not - the effect stays a secret until it is taken), a resonance (one more module of a type that the ship has)
     float badgeX = x + 18.0f;
     const float badgeEnd = x + w - 18.0f;
     if (upgrade)
     {
         badgeX += Chip(badgeX, y + 54.0f, 22.0f, Loc::T("UPGRADE"), 11.0f, Alpha(ink.gold, alpha), badgeEnd - badgeX) + 6.0f;
     }
-    if (!upgrade && Meta::VerbCount(g_Owned, info.verb) >= 1)
+    const int combo = upgrade ? -1 : Meta::ComboCompletedBy(g_Owned, module);
+    if (combo >= 0)
+    {
+        const Id partner = Meta::COMBOS[combo].a == static_cast<Id>(module) ? Meta::COMBOS[combo].b : Meta::COMBOS[combo].a;
+        const std::string label = Meta::ComboFound(combo) ? Loc::FmtText("SYNERGY: {0}", Loc::T(Meta::COMBOS[combo].name)) : Loc::FmtText("LINKS WITH {0}", Loc::T(INFO[static_cast<int>(partner)].name));
+        badgeX += Chip(badgeX, y + 54.0f, 22.0f, label, 11.0f, Alpha(GOLD, alpha), badgeEnd - badgeX) + 6.0f;
+    }
+    if (!upgrade && Meta::VerbCount(g_Owned, info.verb) >= 1 && badgeEnd - badgeX > 60.0f)
     {
         badgeX += Chip(badgeX, y + 54.0f, 22.0f, Loc::T("RESONANCE"), 11.0f, Alpha(ink.gold, alpha), badgeEnd - badgeX) + 6.0f;
-    }
-    const int combo = Meta::ComboCompletedBy(g_Owned, module);
-    if (combo >= 0 && badgeEnd - badgeX > 26.0f)
-    {
-        const std::string label = Meta::ComboFound(combo) ? Loc::T(Meta::COMBOS[combo].name) : std::string("?");
-        Chip(badgeX, y + 54.0f, 22.0f, label, 11.0f, Alpha(ink.gold, alpha), badgeEnd - badgeX);
     }
     DrawCardIcon(module, x + w * 0.5f, y + 136.0f, tint, sel, alpha);
     if (upgrade)
@@ -926,11 +937,11 @@ struct RouteText
 
 const RouteText ROUTES[5] = {
 
-    {"ELITE FLEET", ICON_ELITE, "TWO MODULE PICKS", "AN UPGRADE AMONG THE CARDS", "ELITES JOIN WAVES 3 AND 4", UiKit::Rgba(1.00f, 0.62f, 0.36f, 1.0f)},
-    {"SUPPLY RUN", ICON_SUPPLY, "+30 HP AFTER THE WAVE", "A MODULE AND AN UPGRADE", "ONLY ONE NEW MODULE", UiKit::Rgba(0.55f, 1.00f, 0.72f, 1.0f)},
-    {"NEW MODULE", ICON_PLUS, "PICK ONE OF THREE", nullptr, nullptr, UiKit::Rgba(0.55f, 0.86f, 1.00f, 1.0f)},
-    {"FORGE", ICON_FORGE, "TWO MODULE UPGRADES", "BIGGER EFFECTS, LOWER COSTS", "NO NEW MODULE", UiKit::Rgba(1.00f, 0.80f, 0.30f, 1.0f)},
-    {"WAGER", ICON_WAGER, "A MODULE AND AN UPGRADE", nullptr, "PAY 30% OF MAX HP", UiKit::Rgba(1.00f, 0.50f, 0.46f, 1.0f)}};
+    {"ELITE FLEET", ICON_ELITE, "SHOOT DOWN THE EXTRA ELITE: A FREE UPGRADE", "IN WAVE 3 AND IN WAVE 4", "AN ELITE JOINS WAVES 3 AND 4", UiKit::Rgba(1.00f, 0.62f, 0.36f, 1.0f)},
+    {"CALIBRATION", ICON_SUPPLY, "EVERY PICK SHOWS A CARD THAT LINKS TO YOUR MODULES", "+1 REROLL", "NO ELITE UPGRADES", UiKit::Rgba(0.55f, 1.00f, 0.72f, 1.0f)},
+    {"NEW MODULE", ICON_PLUS, "PICK ONE OF THREE", "A NEW EFFECT AND A CHANCE AT A SYNERGY", nullptr, UiKit::Rgba(0.55f, 0.86f, 1.00f, 1.0f)},
+    {"FORGE", ICON_FORGE, "TWO MODULE UPGRADES", "BIGGER EFFECTS, NO DRAWBACK", "NO NEW MODULE", UiKit::Rgba(1.00f, 0.80f, 0.30f, 1.0f)},
+    {"WAGER", ICON_WAGER, "A NEW MODULE AND AN UPGRADE", nullptr, "PAY 30% OF MAX HP", UiKit::Rgba(1.00f, 0.50f, 0.46f, 1.0f)}};
 
 void DrawBranchCard(int slot)
 {
@@ -961,10 +972,7 @@ void DrawBranchCard(int slot)
     if (locked)
     {
         const char* why = "NOT ENOUGH HP";
-        if (kind == ROUTE_SUPPLY)
-            why = g_BranchMessage > 0 ? "NEEDS DAMAGE" : "FULL HP";
-        else if (kind == ROUTE_FORGE || !AnyUpgradable())
-            why = "NOTHING TO UPGRADE";
+        if (kind == ROUTE_FORGE || !AnyUpgradable()) why = "NOTHING TO UPGRADE";
 
         Chip(x + 18.0f, y + 54.0f, 22.0f, Loc::T(why), 11.0f, Alpha(g_BranchMessage > 0 ? DANGER_RED : DIM, rise), w - 36.0f);
     }
@@ -1013,6 +1021,12 @@ void DrawBranch()
     for (int i = 0; i < g_RouteCount; ++i)
     {
         DrawBranchCard(i);
+    }
+    if (g_RouteStage == 2 && g_EliteBonus) // the elite of the wave was shot down: the reward says that it pays one more pick
+    {
+        const std::string bonus = Loc::T("ELITE REWARD: +1 UPGRADE");
+        const float bonusW = UiKit::TextWidth(bonus, 14.0f) + 36.0f;
+        Chip(640.0f - bonusW * 0.5f, 150.0f, 28.0f, bonus, 14.0f, GOLD, bonusW);
     }
     const std::string hint = Loc::T(g_RouteCount >= 3 ? "PRESS 1 2 3 OR CLICK" : "PRESS 1 2 OR CLICK");
     Txt(hint, 640.0f, 676.0f, UiKit::FitFontPx(hint, 13.0f, 900.0f), UiKit::Rgba(0.56f, 0.64f, 0.78f, 0.90f), TextAlignment::Center, 1000.0f);
@@ -1116,6 +1130,7 @@ void DrawMotes()
     }
 }
 }
+
 
 
 

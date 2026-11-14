@@ -1,5 +1,6 @@
 #include "game/Combat.h"
 #include "boss/GameBoss.h"
+#include "rogue/ModuleDefs.h"
 #include "core/Collision.h"
 #include "core/GameAudio.h"
 #include "core/PostFx.h"
@@ -15,6 +16,7 @@
 #include "game/ScreenShake.h"
 #include "rogue/Modules.h"
 
+#include <algorithm>
 #include <cstdio>
 
 namespace Combat
@@ -84,9 +86,12 @@ void CheckBulletEnemyCollision()
             // Balance::ELITE_SHIELD of its damage (BREACH goes through). The modules scale the damage (Mod::DamageMul).
             const float focus = Mod::OnShotHit(enemyIndex); // FOCUS: hits on the same enemy in a row
             const float shield = enemy.shield ? Mod::ShieldFactor() : 1.0f;
-            const int damage = Mod::PlayerShotDamage(shield * focus * ((enemy.elite || enemy.type == EnemyType::Rival) ? Mod::BreachBonus() : 1.0f));
+            const bool bonusTarget = enemy.elite || enemy.type == EnemyType::Rival;
+            const int damage = Mod::PlayerShotDamage(shield * focus * (bonusTarget ? Mod::BreachBonus() : 1.0f));
+            const int dealt = (std::min)(damage, (std::max)(0, enemy.hp));
             enemy.hp -= damage;
             Mod::NoteDamage(static_cast<float>(damage) / static_cast<float>(Balance::HP_UNIT));
+            Mod::NoteDealt(static_cast<float>(dealt) / static_cast<float>(Balance::HP_UNIT), enemy.shield ? 1.0f - Balance::ELITE_SHIELD : 0.0f, bonusTarget, false); // (the run report)
 
             const bool usesHeavyAudio = UsesHeavyEnemyAudio(enemy.type);
 
@@ -229,9 +234,12 @@ void ApplySpecialShotDamage()
             GameEffect::SpawnHit(enemy.x, enemy.y, true);
             GameAudio::PlayAt(GameSound::BossCannonBreak, enemy.x);
         }
-        const int tick = static_cast<int>(static_cast<float>(Mod::SpecialTickDamage()) * ((enemy.elite || enemy.type == EnemyType::Rival) ? Mod::BreachBonus() : 1.0f));
+        const bool bonusTarget = enemy.elite || enemy.type == EnemyType::Rival;
+        const int tick = static_cast<int>(static_cast<float>(Mod::SpecialTickDamage()) * (bonusTarget ? Mod::BreachBonus() : 1.0f));
+        const int dealt = (std::min)(tick, (std::max)(0, enemy.hp));
         enemy.hp -= tick;
         Mod::NoteDamage(static_cast<float>(tick) / static_cast<float>(Balance::HP_UNIT));
+        Mod::NoteDealt(static_cast<float>(dealt) / static_cast<float>(Balance::HP_UNIT), 0.0f, bonusTarget, true); // (the beam broke the shield above: nothing was reduced)
         enemy.hitFlashTimer = 4;
 
         if (enemy.hp > 0)
@@ -387,16 +395,17 @@ void CheckPlayerEnemyBulletCollision()
         }
 
         // a white (neutral) bullet is never the colour of the ship: it cannot be absorbed ...
-        bool isSamePolarity = !enemyBullet.neutral && GameState::player.polarity == enemyBullet.polarity;
-        // ... unless it grazes a ship that has DEFLECT: the first time it touches the big box of the ship (the one that absorbs) it is rolled once
+        bool isSamePolarity = (!enemyBullet.neutral && GameState::player.polarity == enemyBullet.polarity) || enemyBullet.deflected; // (a deflected bullet stays absorbable until it is in the ship)
+        // ... unless it grazes a ship that has DEFLECT: the first time it touches the net of the ship (a little wider than the box that absorbs) it is rolled once
         if (!isSamePolarity && enemyBullet.neutral && !enemyBullet.grazed && Mod::DeflectChance() > 0.0f
-            && Collision::CheckAABB(GameState::player.x, GameState::player.y, GameState::player.halfWidth, GameState::player.halfHeight, enemyBullet.x, enemyBullet.y,
-                                    enemyBullet.halfWidth, enemyBullet.halfHeight))
+            && Collision::CheckAABB(GameState::player.x, GameState::player.y, GameState::player.halfWidth * Mod::DeflectNetScale(), GameState::player.halfHeight * Mod::DeflectNetScale(),
+                                    enemyBullet.x, enemyBullet.y, enemyBullet.halfWidth, enemyBullet.halfHeight))
         {
             enemyBullet.grazed = true;
             if (Mod::TryDeflect())
             {
                 isSamePolarity = true;
+                enemyBullet.deflected = true;
                 enemyBullet.energyMul = Mod::DeflectEnergyMul();
                 GameEffect::SpawnDeflect(enemyBullet.x, enemyBullet.y);
             }
@@ -431,7 +440,8 @@ void CheckPlayerEnemyBulletCollision()
 
             GameAudio::PlayAbsorb(enemyBullet.polarity == Polarity::Red); // the colour of the bullet that was absorbed
 
-            Mod::OnAbsorb(GameState::ENERGY_PER_ABSORB * enemyBullet.energyMul);
+            // (the run report: a bullet that only the wide net of SIPHON caught, a white bullet that DEFLECT turned)
+            Mod::OnAbsorb(GameState::ENERGY_PER_ABSORB * enemyBullet.energyMul, enemyBullet.neutral ? static_cast<int>(Mod::Id::Deflect) : (bySiphon ? static_cast<int>(Mod::Id::Siphon) : -1));
 
             continue;
         }
@@ -450,6 +460,7 @@ void CheckPlayerEnemyBulletCollision()
     }
 }
 }
+
 
 
 
