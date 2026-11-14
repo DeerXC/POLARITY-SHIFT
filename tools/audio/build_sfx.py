@@ -33,14 +33,16 @@ LEVELS = {  # dBFS, A-weighted, gated
     "hit": -27.0,        # a shot on a light fighter
     "ui": -26.0,         # decide, apply, open, error, hint; the switch of colour; the small effects of the modules and the tactics
     "chime": -26.0,
+    "shield": -27.0,     # a shot that a shield holds off: a knock that says "nothing happened" is quieter than a hit that hurts
     "hit_heavy": -25.0,  # elite / armour / glass / blades
-    "boss_hit": -24.0,   # the boss; the shield (a knock that says "nothing happened": quieter than a hit that hurts)
-    "kill": -23.0,       # a light fighter blows up
+    "boss_hit": -24.0,   # the boss
+    "kill": -26.0,       # a light fighter is gone (version 10: 3 dB lower: it is a pop, and it is the sound that is heard most after the shots)
+    "kill_heavy": -22.0, # an elite is gone: under the explosions of the boss
     "entrance": -22.0,   # the second rival arrives: heard, not an alarm
     "jingle": -21.0,     # wave clear, unlock, synergy, heal, energy full, the cards
     "damage": -20.0,     # the ship is hurt
     "beam": -19.0,       # the piercing beam
-    "big": -19.0,        # elite and boss explosions, the cannon, the laser
+    "big": -19.0,        # the explosions of the boss, the cannon, the laser
     "death": -19.0,
     "alert": -18.0,      # the cues: they must be heard through everything
     "boss_alert": -17.0,
@@ -50,10 +52,12 @@ LEVELS = {  # dBFS, A-weighted, gated
 PEAK_TARGET = {"peak": -13.0}   # sounds that are set by their peak, not their loudness (the heartbeat: felt more than heard)
 CEILING = -1.0                  # dBFS: the highest peak of a class that is not in CEILINGS
 # the highest peak a class may have (dBFS): the small sounds are small in the file too, the big ones may use the whole range
-CEILINGS = {"tick": -8.0, "shot": -8.0, "absorb": -8.0, "hit": -6.0, "ui": -6.0, "chime": -6.0, "hit_heavy": -4.0, "boss_hit": -3.0, "kill": -3.0, "entrance": -3.0, "jingle": -3.0}
+CEILINGS = {"tick": -8.0, "shot": -8.0, "absorb": -8.0, "hit": -6.0, "ui": -6.0, "chime": -6.0, "shield": -6.0, "hit_heavy": -4.0, "boss_hit": -3.0, "kill": -4.0,
+            "kill_heavy": -3.0, "entrance": -3.0, "jingle": -3.0}
 MAX_SQUASH = 2.0                # the soft clip may see a peak this many times the ceiling
 # how far the tail of a sound is kept (dB under its peak): the rest of a tail is under the music and is cut, so a sound that is heard hundreds of times does not occupy a voice
-TAIL_DB = {"tick": -40, "shot": -40, "absorb": -40, "hit": -40, "ui": -44, "chime": -46, "hit_heavy": -42, "boss_hit": -44, "kill": -44, "alert": -50, "peak": -50}
+TAIL_DB = {"tick": -40, "shot": -40, "absorb": -40, "hit": -40, "ui": -44, "chime": -46, "shield": -40, "hit_heavy": -42, "boss_hit": -44, "kill": -44, "kill_heavy": -44,
+           "alert": -50, "peak": -50}
 DEFAULT_TAIL_DB = -54
 
 

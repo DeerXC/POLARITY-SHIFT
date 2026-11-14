@@ -3,13 +3,22 @@
 THE FAMILY OF IMPACTS (version 9). A hit, a shield and a kill are the same few layers heard at three sizes (common.impact): a SNAP of noise, a BODY that falls in pitch, a BOLT
 (the energy of the weapon) and DEBRIS. Version 8 made them from a wooden bar and a glass bar: it was one instrument, and a struck bar is not a weapon. Now:
     HIT      snap + body + bolt, a little air and a few chips; blue is bright and glassy (the glass layer is on top), red is dark and bitten (the body is on top)
-    SHIELD   the body and a dull snap, nothing above 2.5 kHz: it says 'nothing happened'
-    KILL     the same snap and body as the hit, then it opens: a blast of noise that falls in pitch, debris, and a figure of three notes rising behind it (quiet: 'it is gone')
-The materials differ in the weight of the body, the band of the snap and what rings: armour is low and dull, the sniper's glass is thin and bright, the rival strikes twice."""
+    SHIELD   a dull slap of noise and a click, nothing above 7 kHz and nothing that has a pitch: it says 'nothing happened'
+    KILL     the same snap and body as the hit, then it opens: a puff of air that falls in pitch, a few chips, and a figure of three notes rising behind it (quiet: 'it is gone')
+The materials differ in the weight of the body, the band of the snap and what rings: armour is low and dull, the sniper's glass is thin and bright, the rival strikes twice.
+
+VERSION 10. Three sounds were wrong, and what was wrong with each is a rule for the others:
+    the KILL was too explosive: a light fighter is a small thing, and a blast that falls from 6 kHz to 350 Hz with a boom under it is the size of a building. Now it is a pop: a short
+      puff, a soft body, a few chips; the loudness of its class is 3 dB lower.
+    the SHIELD sounded like a slapped bucket: a sine that falls from 150 Hz to 66 Hz and a wooden partial an octave under the note is a hollow body that rings (a 'boink'). Now there is
+      no tone in it at all: noise through a low-pass that closes, a click, a breath of fizz.
+    the LOCK of the charger sounded like an item that was picked up: three notes that rise (D A D) are a reward, and the music plays that very figure for a win. A lock is the opposite:
+      one pitch, pings that come faster and faster, then one hard latch and a held tone on that same pitch. Nothing in it rises or falls.
+"""
 import numpy as np
 
 from .common import P, impact
-from .dsp import (T, BAR, Mix, PLATE, WOOD, crack, crackle, drive, env, fit, glass, harm, lp, modal, moving_band, n_, noise, phase, room, saw_amps, smooth, sweep, thump, tick)
+from .dsp import (T, BAR, Mix, PLATE, WOOD, crack, crackle, drive, env, fit, glass, harm, lp, modal, moving_band, n_, noise, phase, room, saw_amps, sizzle, smooth, sweep, thump, tick)
 from .registry import sfx
 
 
@@ -102,21 +111,27 @@ def boss_hit(rng, v):
                snap=(1200, 8000, 0.010, 0.80),
                body=(190, 70, 0.06, 1.0),
                debris=(500, 1500, 6000, 0.04, 0.22),
-               tone=(lambda r: modal(f, 0.2, PLATE, r, 0.6), 0.32))
+               tone=(lambda r: modal(f, 0.2, PLATE, r, 0.5), 0.32))
     return fit(m.out(), 0.24) * env(0.24, 0.0005, None, 0.04)
 
 
-@sfx("boss_armor", "boss_hit", 3)
+@sfx("boss_armor", "shield", 3)
 def boss_armor(rng, v):
-    """THE SHIELD (an elite's, the boss's armour): a dull snap, a body, a short damped knock and a few chips - nothing above 2.5 kHz and nothing that rings. It says 'nothing
-    happened'."""
-    w = P(*[("D", 4), ("E", 4), ("G", 4)][v])
-    m = Mix(0.24)
-    m.add(lp(crack(0.04, rng, 300, 2400, 0.012), 2600), 0, 0.85)
-    m.add(thump(150, 66, 0.14, 0.045), 0, 1.0)
-    m.add(modal(w * 0.5, 0.14, [(1.0, 1.0, 0.05), (2.136, 0.35, 0.03), (2.918, 0.2, 0.02)], rng), 0, 0.42)
-    m.add(crackle(0.12, rng, 200, 400, 2200, 0.03), 0.004, 0.15)
-    return fit(m.out(), 0.24) * env(0.24, 0.0005, None, 0.04)
+    """THE SHIELD (an elite's, the boss's armour): it says 'nothing happened' and it must not say anything else. Version 8 was a ringing glass, version 9 a hollow bucket (a sine
+    that falls from 150 Hz and a wooden partial under the note: a body that rings). This one has NO TONE in it: a slap of noise through a low-pass that closes while it dies
+    (damped plate: nothing rings, nothing has a pitch), a lower slap of noise under it for the weight (also without a pitch: a sine here is the bucket), a hard click on top,
+    and a breath of fizz that falls (the energy being taken). 110 ms."""
+    dur = 0.12
+    t = T(dur)
+    cut = [650.0, 800.0, 980.0][v]
+    slap = lp(noise(dur, rng), cut) * np.exp(-t / 0.020)
+    weight = lp(noise(dur, rng), 300.0) * np.exp(-t / 0.026)
+    m = Mix(dur)
+    m.add(slap, 0.0, 1.0)
+    m.add(weight, 0.0, 1.1)
+    m.add(crack(0.03, rng, 1300, 5200, 0.0035), 0.0, 0.70)
+    m.add(moving_band(noise(0.06, rng), (6500, 2200)) * env(0.06, 0.002, 0.02, 0.02), 0.002, 0.20)
+    return fit(m.out(), dur) * env(dur, 0.0004, None, 0.03)
 
 
 # ==========================================================================================================================================================
@@ -130,32 +145,34 @@ def _rising_figure(m, rng, root, at, gains=(0.10, 0.12, 0.14), step=0.05, size=1
 
 @sfx("enemy_explosion", "kill", 3)
 def enemy_explosion(rng, v):
-    """the end of a light fighter: the same snap and body as the hit, then it opens - a blast of noise that falls from 6 kHz to 350 Hz, a boom, debris."""
+    """the end of a light fighter. Version 10: a POP, not a blast (a blast that falls from 6 kHz to 350 Hz with a boom under it is the size of a building, for a thing that is the
+    size of a hand). The same snap as the hit, a soft low body that is gone in 70 ms, a puff of air that falls from 3.2 kHz to 400 Hz and a few chips, and the three notes of glass
+    that rise behind it ('it is gone') are a little louder than before and as loud as the puff: that is what makes it a defeat and not an explosion. (Not much louder: three
+    notes that rise are also the sound of something picked up.) 360 ms."""
     root = P(*[("D", 5), ("E", 5), ("G", 5)][v])
-    m = Mix(0.5)
-    impact(rng, dur=0.5, snap=(1500, 9000, 0.008, 0.80), body=(160, 46, 0.10, 1.0), m=m)
-    m.add(moving_band(noise(0.36, rng), (6000, 350)) * env(0.36, 0.002, 0.09, 0.06), 0.008, 0.85)
-    m.add(crackle(0.34, rng, 1100, 1200, 8000, 0.10), 0.02, 0.45)
-    _rising_figure(m, rng, root, 0.07)
-    return fit(m.out(), 0.5) * env(0.5, 0.0005, None, 0.1)
+    m = Mix(0.4)
+    impact(rng, dur=0.4, snap=(1000, 6000, 0.007, 0.60), body=(135, 52, 0.060, 0.80), m=m)
+    m.add(moving_band(noise(0.22, rng), (3200, 400)) * env(0.22, 0.003, 0.05, 0.05), 0.008, 0.50)
+    m.add(crackle(0.2, rng, 600, 1500, 6500, 0.06), 0.02, 0.20)
+    _rising_figure(m, rng, root, 0.06, gains=(0.12, 0.14, 0.16), step=0.055)
+    return fit(m.out(), 0.4) * env(0.4, 0.0005, None, 0.09)
 
 
-@sfx("elite_explosion", "big")
+@sfx("elite_explosion", "kill_heavy")
 def elite_explosion(rng, v):
-    """the end of an elite: the same, bigger and lower - a long boom, a blast that falls from 5 kHz to 200 Hz, shards of metal, a long rattle, and the figure of notes an octave
-    down with two more above."""
+    """the end of an elite: the same pop, bigger and lower - a body an octave down, a puff that falls from 4 kHz to 200 Hz, a rattle of chips, the figure of notes an octave down and
+    two more above it. (Version 10: about half of the blast of version 9, and its own class, 3 dB under the explosions of the boss.)"""
     root = P("D", 4)
-    m = Mix(1.0)
-    impact(rng, dur=1.0, snap=(900, 8000, 0.012, 0.85), body=(130, 38, 0.16, 1.1), m=m)
-    m.add(moving_band(noise(0.7, rng), (5000, 200)) * env(0.7, 0.002, 0.17, 0.1), 0.01, 0.85)
-    m.add(moving_band(noise(0.3, rng), (9000, 1500)) * env(0.3, 0.002, 0.07, 0.05), 0.0, 0.45)
-    m.add(crackle(0.8, rng, 1300, 1000, 7000, 0.22), 0.02, 0.50)
-    for _ in range(7):
-        m.add(modal(float(np.exp(rng.uniform(np.log(900), np.log(4200)))), 0.3, PLATE, rng, 0.35), rng.uniform(0.02, 0.35), rng.uniform(0.07, 0.17))
-    _rising_figure(m, rng, root, 0.08, gains=(0.14, 0.16, 0.18), step=0.07, size=1.8)
+    m = Mix(0.8)
+    impact(rng, dur=0.8, snap=(800, 6000, 0.010, 0.65), body=(115, 40, 0.11, 0.85), m=m)
+    m.add(moving_band(noise(0.5, rng), (4000, 200)) * env(0.5, 0.003, 0.12, 0.08), 0.01, 0.50)
+    m.add(crackle(0.5, rng, 700, 900, 5500, 0.12), 0.02, 0.25)
+    for _ in range(4):
+        m.add(modal(float(np.exp(rng.uniform(np.log(900), np.log(3500)))), 0.25, PLATE, rng, 0.3), rng.uniform(0.02, 0.25), rng.uniform(0.04, 0.10))
+    _rising_figure(m, rng, root, 0.07, gains=(0.13, 0.15, 0.17), step=0.07, size=1.8)
     for i, (name, octave) in enumerate([("A", 5), ("D", 6)]):
-        m.add(glass(P(name, octave), 0.5, rng, tau=0.5), 0.30 + i * 0.07, 0.16)
-    return room(m.out(), 0.5, 0.16)
+        m.add(glass(P(name, octave), 0.5, rng, tau=0.5), 0.28 + i * 0.07, 0.12)
+    return room(m.out(), 0.4, 0.14)
 
 
 # ==========================================================================================================================================================
@@ -184,16 +201,23 @@ def sniper_fire(rng, v):
 
 @sfx("charger_warning", "alert")
 def charger_warning(rng, v):
-    """THE CHARGER LOCKS ITS LANE: a short figure of notes - three strikes that RISE (D A D: the answer of the motto, 'it is coming'), a ping of glass on the last that cuts
-    through the music, and a thin glide under them that closes like a lock. All the energy is between 500 Hz and 3.5 kHz; nothing under 250 Hz."""
-    m = Mix(0.6)
-    for t, name, octave, g in [(0.0, "D", 5, 0.8), (0.11, "A", 5, 1.0), (0.22, "D", 6, 1.0)]:
-        m.add(modal(P(name, octave), 0.3, WOOD, rng, 1.3), t, g)
-        m.add(tick(rng, 3500, 0.001), t, 0.5)
-    m.add(glass(P("A", 6), 0.35, rng, tau=0.5), 0.22, 0.6)
-    m.add(glass(P("D", 7), 0.3, rng, tau=0.4), 0.22, 0.3)
-    f = sweep(P("D", 5), P("D", 6), 0.22)
-    m.add(np.sin(phase(f)) * env(0.22, 0.01, None, 0.03), 0, 0.18)
+    """THE CHARGER LOCKS ITS LANE. Version 10: a LOCK-ON, not a reward. (Version 9 rose D A D, and the music plays that very figure for a win; the version before that was a growl,
+    dull and loud at once.) Everything here is ONE PITCH, A6 - 1.76 kHz, at the lower edge of the band where the music is not: six hard pings that come faster and faster (the lane is following the ship), then, at
+    the moment that the lane is locked (the last 14 of the 45 steps of the warning: 0.52 s in), a latch - a metal click and a short low thunk - and a held tone on the same pitch
+    that lasts until the charge starts. Nothing in it rises and nothing falls: a held, steady tone is what a lock sounds like. 0.78 s."""
+    f = P("A", 6)
+    m = Mix(0.8)
+    for i, t in enumerate([0.0, 0.14, 0.255, 0.35, 0.43, 0.50]):
+        g = 0.50 + 0.07 * i
+        m.add(modal(f, 0.12, [(1.0, 1.0, 0.035), (2.0, 0.14, 0.012)], rng) * smooth(T(0.12) / 0.0012), t, g)
+        m.add(tick(rng, 4200, 0.0008), t, 0.22)
+    lock = 0.54
+    m.add(crack(0.03, rng, 2200, 9000, 0.004), lock, 0.80)                                          # the latch: a metal click ...
+    m.add(modal(2300.0, 0.06, [(1.0, 1.0, 0.012), (1.93, 0.4, 0.008)], rng), lock, 0.35)
+    m.add(thump(120, 78, 0.09, 0.025), lock, 0.55)                                                  # ... and a short, dry thunk under it
+    held = 0.22
+    tone = (np.sin(phase(np.full(n_(held), f))) + 0.10 * np.sin(phase(np.full(n_(held), f * 2.0)))) * env(held, 0.004, None, 0.045)
+    m.add(tone, lock, 0.50)                                                                         # the held tone on the pitch of the pings
     return m.out()
 
 
