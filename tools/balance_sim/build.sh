@@ -13,7 +13,8 @@ OBJ="$OUT.obj"
 mkdir -p "$OBJ"
 SRC="boss/BossDraw.cpp boss/BossMask.cpp boss/GameBoss.cpp core/Collision.cpp core/DebugOptions.cpp core/Loc.cpp game/BeamFx.cpp game/Combat.cpp game/EnemyArt.cpp
 game/EnemyDraw.cpp game/GameEffect.cpp game/GameEnemy.cpp game/GamePlayer.cpp game/GamePlayerBullet.cpp game/GameSpecialShot.cpp game/GameState.cpp game/GameVfx.cpp
-game/GameWave.cpp game/ScreenShake.cpp rogue/Meta.cpp rogue/Modules.cpp rogue/ModulesData.cpp rogue/ModulesDirector.cpp rogue/ModulesEffects.cpp rogue/ModulesPick.cpp"
+game/GameWave.cpp game/ScreenShake.cpp rogue/Meta.cpp rogue/Modules.cpp rogue/ModulesData.cpp rogue/ModulesDirector.cpp rogue/ModulesEffects.cpp rogue/ModulesPick.cpp
+rogue/ModulesStats.cpp"
 export FLAGS="-std=c++20 -O2 -w -I$HERE/native -I$ROOT/src -I$HERE"
 export OBJ
 NEWEST_HEADER=$(find "$ROOT/src" "$HERE" -name '*.h' -printf '%T@\n' | sort -n | tail -1 | cut -d. -f1)

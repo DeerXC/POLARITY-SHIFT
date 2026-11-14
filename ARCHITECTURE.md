@@ -33,7 +33,7 @@ main.cpp ─ Game (scene switch, frame loop, fixed 60 Hz step + render interpola
 ├─ src/boss      the three-phase boss ("ARBITER"): GameBoss (state machine, attacks, drones, rail gun) + BossDraw (drawing),
 │                sharing BossInternal.h; BossMask (hit masks)
 │
-├─ src/rogue     the roguelite layer: modules (pick, effects, synergies), meta progression (hangar, talents), balance tables
+├─ src/rogue     the roguelite layer (see "The roguelite layer"): modules, picks and routes, the books of what a module did, meta progression, balance tables
 │
 ├─ src/ui        UI: GameHud (battle HUD), GameMenuUi (the menu language "THE SEAM": rows, headers, notices, backdrop),
 │                CutIn (WAVE CLEAR / WARNING / BREAK cards), SceneFx (screen transitions), UiKit (virtual 1280 x 720 primitives)
@@ -46,6 +46,26 @@ Dependencies point down: `ui` and `game` use `core`; apart from the entry point 
 ### Logic and drawing are separate files
 
 The two biggest systems, the boss and the enemies, are split in two: `GameBoss.cpp` / `GameEnemy.cpp` hold the behaviour and never draw; `BossDraw.cpp` / `EnemyDraw.cpp` draw and never change the game. What the two halves share (types, numbers, the few pieces of state that the drawing reads) is in `BossInternal.h` / `EnemyInternal.h`. The tests link the drawing too, with a renderer that draws nothing, so a change to either half is covered.
+
+## The roguelite layer (`src/rogue`)
+
+15 modules in three types (absorb, break, survive), upgraded once (level 2), with seven hidden pairs (synergies). The run is five waves and a boss; after every wave the ship picks a card.
+
+**The picks lead.** A build is made of modules that work together, and a player cannot build what is never offered. When a card that completes a synergy with a module the ship owns exists, it is on the pick screen with the chance `Balance::LINK_CHANCE_PERCENT`, and always after the route CALIBRATION. The card says what it links to (`LINKS WITH ECHO`; the name of the synergy once it has been found), so the pick before it was the set-up and this one is the pay-off (`ModulesPick.cpp: PlaceLinkCard`).
+
+**The routes** are trades of what the ship already has, never a new currency:
+
+| after | choice | what it does |
+|---|---|---|
+| wave 2 | ELITE FLEET | an extra elite in waves 3 and 4; each one that is shot down pays a free upgrade pick |
+| wave 2 | CALIBRATION | no extra elites; the picks of waves 3 and 4 always show a linking card; one more reroll |
+| wave 3 | NEW MODULE | one pick of three new modules |
+| wave 3 | FORGE | two upgrades, no new module |
+| wave 3 | WAGER | pay 30 % of the maximum HP: a new module and an upgrade |
+
+Every reward is ONE pick as a base, so none of the three is better than the others in every case (`g_ForgeQueue`: the last picks of a sequence are forges). `tools/balance_sim/run_report_test.cpp` plays every sequence.
+
+**What a module did is booked** (`ModulesStats.cpp`) and shown on the game over and the clear page (`Mod::DrawModuleReport`): damage (shots), energy (units of the bar) and HP, and a count of what it did (arcs, blocks ...). A module is credited with what would NOT have happened without it: what it does itself (an arc of ECHO, the fire of EMBER, the HP that MEND repairs), and, for the modules that only multiply (AFTERGLOW, FOCUS, BREACH, MOMENTUM, TWIN, OVERFLOW), the part of every hit that would be missing without them. Credits of different modules can overlap: they are not a split of one cake. The simulator prints the same numbers (`SIM_STATS_FILE`), which is how a card that does nothing is found.
 
 ## Rendering pipeline (one frame)
 
@@ -96,10 +116,11 @@ The game logic runs at a fixed 60 Hz step; rendering interpolates between the la
 
 | tool | what it does |
 |---|---|
-| `balance_sim` (`sim_main`) | runs the real game logic with a bot: thousands of runs per minute, CSV of damage / energy / clear times per wave and module |
+| `balance_sim` (`sim_main`) | runs the real game logic with a bot: thousands of runs per minute, CSV of damage / energy / clear times per wave and module. With `SIM_STATS_FILE=stats.csv` it also writes what every module did in every run (the numbers of the game over page) |
 | `balance_sim/modvalue.py`, `boss_hits.py`, `variant.py` | analysis on top of the simulator: the clear rate of every single-module build; the HP lost per boss attack; apply a list of constant changes to a copy of the project, build it and measure the three skills of the bot |
 | `boss_hit_test`, `boss_p2_test`, `boss_score_test` | the real boss, frozen or driven: every phase can be hurt by plain shots; the drones of phase 2; the score that the boss pays by its bar |
 | `step_b_test`, `pick_test`, `upgrade_test`, `module_fx_test` | the waves, the elites and the twin rivals; the module picks; the module upgrades; the state behind the module effects |
+| `run_report_test` | the books of the modules (damage, energy, HP: what each one did and what it only made bigger), PULSE on a switch of colour, the cards that lead to a synergy, every route and reward sequence |
 | `abandon_test`, `save_test` | a run that is left keeps its score; the real save code against files |
 | `display_test` | the display arithmetic on 19 monitor shapes (1366 x 768 to 5120 x 1440, 16:10, 21:9, portrait): the game rectangle, the sizes on offer, the mouse, and the filter of the scale-down |
 | `layout_check` | do the texts of the modules fit the cards, in every language |
@@ -132,3 +153,4 @@ The source images of the sprites (the models and their renders) are not in this 
 - `boss_break_test`: four checks about the ram lane that leans fail, as they did before the code was split in two. It is kept out of `make test` (`make -C tools known-failing` runs it).
 - The process is DPI aware for the system, not per monitor: a window dragged to a screen with another scaling is stretched by Windows.
 - The sizes of the windowed mode start at 1280 x 720: on a screen with a work area under about 760 lines (a 1366 x 768 laptop) that window does not fit; use full screen there.
+- The simulator's bot fires the beam only on a full bar, so it never shows what TWIN is worth, and it dodges white bullets so well that DEFLECT does nothing in six runs of ten: those two cards are judged by the numbers of the report in play, not by the bot.

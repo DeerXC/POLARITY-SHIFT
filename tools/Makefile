@@ -22,10 +22,10 @@ LOGIC := boss/GameBoss.cpp boss/BossDraw.cpp boss/BossMask.cpp \
          core/Collision.cpp core/DebugOptions.cpp core/Loc.cpp \
          game/BeamFx.cpp game/Combat.cpp game/EnemyArt.cpp game/EnemyDraw.cpp game/GameEffect.cpp game/GameEnemy.cpp game/GamePlayer.cpp game/GamePlayerBullet.cpp \
          game/GameSpecialShot.cpp game/GameState.cpp game/GameVfx.cpp game/GameWave.cpp game/ScreenShake.cpp \
-         rogue/Meta.cpp rogue/Modules.cpp rogue/ModulesData.cpp rogue/ModulesDirector.cpp rogue/ModulesEffects.cpp rogue/ModulesPick.cpp
+         rogue/Meta.cpp rogue/Modules.cpp rogue/ModulesData.cpp rogue/ModulesDirector.cpp rogue/ModulesEffects.cpp rogue/ModulesPick.cpp rogue/ModulesStats.cpp
 LOGIC_OBJ := $(addprefix $(BUILD)/obj/,$(LOGIC:.cpp=.o)) $(BUILD)/obj/stubs.o
 
-SIM_TESTS := abandon_test boss_hit_test boss_p2_test boss_score_test module_fx_test pick_test step_b_test upgrade_test
+SIM_TESTS := abandon_test boss_hit_test boss_p2_test boss_score_test module_fx_test pick_test step_b_test upgrade_test run_report_test
 # display_test needs no game logic at all (src/core/DisplayMath.h is plain C++); save_test links the real GameSave
 TESTS     := $(SIM_TESTS) save_test display_test
 # Not in `make test`:

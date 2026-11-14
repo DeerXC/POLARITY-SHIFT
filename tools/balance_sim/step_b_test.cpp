@@ -499,11 +499,14 @@ static void TestSurviveModules()
     GamePlayer::Initialize(GameState::player);
     Mod::Grant(Mod::Id::Aegis);
     GameState::playerHp = Mod::MaxHp();
-    Check(Mod::ScaleDamageTaken(13, "sniper") == 13, "AEGIS: a coloured bullet is not stopped");
-    Check(Mod::ScaleDamageTaken(13, "white_sniper") == 0, "... a white bullet is");
-    Check(Mod::ScaleDamageTaken(18, "boss_beam_rail_shot") == 18, "... once: the shield has to recharge");
+    Check(Mod::ScaleDamageTaken(13, "sniper") == 0, "AEGIS: the shield takes a hit of ANY kind (a coloured bullet) - it took white bullets only, and DEFLECT answers those");
+    Check(Mod::ScaleDamageTaken(13, "white_sniper") == 13, "... once: the shield has to recharge (the next hit, a white bullet, goes through)");
+    Check(Mod::ScaleDamageTaken(18, "boss_beam_rail_shot") == 18, "... and so does a beam of the boss while it is down");
     for (int i = 0; i < Balance::AEGIS_ABSORBS; ++i) Mod::OnAbsorb(6.0f);
-    Check(Mod::ScaleDamageTaken(18, "boss_beam_rail_shot") == 0, "... after 40 absorbed bullets it stops a beam of the boss");
+    Check(Mod::ScaleDamageTaken(18, "boss_beam_rail_shot") == 0, "... after the absorbed bullets it stops a beam of the boss");
+    Check(Mod::ScaleDamageTaken(16, "ram") == 16, "... and then a body hit is not stopped (it is recharging again)");
+    for (int i = 0; i < Balance::AEGIS_ABSORBS; ++i) Mod::OnAbsorb(6.0f);
+    Check(Mod::ScaleDamageTaken(16, "ram") == 0, "... but a body is, once it is back");
     // deflect
     Mod::Reset();
     GameState::ResetRun();
@@ -728,4 +731,5 @@ int main()
     std::printf(g_Failures == 0 ? "all checks passed\n" : "%d check(s) FAILED\n", g_Failures);
     return g_Failures == 0 ? 0 : 1;
 }
+
 

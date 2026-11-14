@@ -694,8 +694,19 @@ int main(int argc, char** argv)
         std::srand(seed * 100003u + static_cast<unsigned>(n));
         g_Rng.seed(seed * 7919u + static_cast<unsigned>(n) * 31u + 13u);
         const Result r = RunOne(SKILLS[skillIndex], draft, withBoss, mods, 60 * 60 * 9);
+        if (const char* statsPath = std::getenv("SIM_STATS_FILE")) // what the modules did in this run (the report of the game over page): one line per module, and one for the run
+        {
+            std::ofstream stats(statsPath, std::ios::app);
+            stats << "run," << seed << ',' << n << ',' << r.result << ',' << r.wave << ',' << r.bossPhase << ',' << r.frames << ',' << Mod::g_Branch << ',' << Mod::ReportTotalDamage() << ',' << Mod::ReportTotalEnergy() << ',' << Mod::g_OrderCount << ',' << Mod::g_RunHits << '\n';
+            for (int i = 0; i < Mod::ModuleReportCount(); ++i)
+            {
+                const Mod::ModuleReportRow row = Mod::ModuleReportAt(i);
+                stats << "mod," << seed << ',' << n << ',' << r.result << ',' << row.module << ',' << row.level << ',' << row.damage << ',' << row.energy << ',' << row.hp << ',' << row.count << '\n';
+            }
+        }
         std::printf("%u,%s,%d,%d,%d,%d,%d,%d,%d,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", seed, SKILLS[skillIndex].name, r.result, r.wave, r.bossPhase, r.frames, r.hp, r.hits, r.absorbs, r.mask, r.rivalFrames, r.rivalDamage, r.bossFrames, r.overloads, r.breaks, r.hpBoss, r.waveStart[2], r.waveStart[3], r.waveStart[4], r.waveStart[5], r.waveStart[6], r.phaseAt[2], r.phaseAt[3], r.hitsAtP3 >= 0 ? r.hits - r.hitsAtP3 : -1, r.p3Open, r.hitsAt[1], r.hitsAt[2], r.hitsAt[3], r.hitsAt[4], r.hitsAt[5], r.hitsAt[6], static_cast<int>(Mod::g_StatKillEnergy), static_cast<int>(Mod::g_StatAbsorbEnergy));
     }
     return 0;
 }
+
 
